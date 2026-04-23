@@ -1,0 +1,44 @@
+body {
+    background: #111;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+    padding-top: 50px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f4d03f;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.wyniki {
+    margin-top: 30px;
+}
+
+.panel {
+    background: #222;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+input {
+    padding: 8px;
+    margin-bottom: 10px;
+    width: 80%;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: #333;
+    color: white;
+}
+
+.secondary {
+    background: #444;
+    margin-top: 5px;
+}

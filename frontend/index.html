@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Kasyno Online</h1>
+
+    <div id="auth-panel" class="panel">
+    <h2 id="auth-title">Logowanie</h2>
+    
+    <input type="text" id="user-login" placeholder="Twój login"><br>
+    <input type="password" id="user-pass" placeholder="Twoje hasło"><br>
+    
+    <button id="auth-main-btn" onclick="wykonajAkcje()">Zaloguj się</button>
+    
+    <p style="font-size: 0.8rem; margin-top: 15px;">
+        <span id="auth-switch-text">Nie masz konta?</span> 
+        <a href="#" onclick="przelaczTryb()" id="auth-link" style="color: #f4d03f;">Zarejestruj się</a>
+    </p>
+    </div>
+
+    <div id="game-panel" class="panel" style="display: none;">
+    <h2 id="powitanie">Witaj!</h2>
+    <p>Twoje saldo: <span id="saldo">0</span> PLN</p>
+    <hr>
+    
+    <div id="actions" style="margin-bottom: 20px;">
+        <button id="btn-start" onclick="startGry()">ROZDAJ KARTY</button>
+        <button id="btn-hit" onclick="hit()" style="display:none; background: #e67e22;">HIT (Dobierz)</button>
+        <button id="btn-stand" onclick="stand()" style="display:none; background: #3498db;">STAND (Czekaj)</button>
+    </div>
+
+    <h3 id="komunikat" style="color: #f1c40f;"></h3>
+
+    <div class="wyniki">
+        <p>Krupier: <span id="krupier-karta">?</span> <br><small id="krupier-punkty"></small></p>
+        <p>Twoje karty: <span id="moje-karty">-</span></p>
+        <p>Punkty: <span id="moje-punkty">0</span></p>
+    </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
