@@ -2,46 +2,249 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Blackjack</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>UKSW Royale Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=10">
 </head>
 <body>
-    <h1>Kasyno Online</h1>
+    <nav class="navbar">
+        <div class="nav-left">
+            <input type="text" placeholder="Search" class="search-bar">
+            <a href="#" onclick="playNow()">GAMES</a>
+            <a href="#" onclick="showSubpage(event)">PROMOTIONS</a>
+        </div>
+        <div class="nav-logo" onclick="showLanding()" style="cursor: pointer;">
+            <h2>UKSW ROYALE</h2>
+            <p>CASINO</p>
+        </div>
+        <div class="nav-right">
+            <a href="#" onclick="showSubpage(event)">ABOUT US</a>
+            <a href="#" onclick="showSubpage(event)">SUPPORT</a>
+            <div id="auth-buttons">
+                <button class="btn-login" onclick="showAuth()">LOG IN</button>
+                <button class="btn-join" onclick="showAuth()">JOIN NOW</button>
+            </div>
+            <div id="user-info" style="display: none; align-items: center; gap: 15px;">
+                <div class="balance-badge">
+                    <span id="balance-display">0</span> USD
+                </div>
+                <div class="account-dropdown">
+                    <button class="btn-account" onclick="toggleDropdown()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div id="dropdown-menu" class="dropdown-content">
+                        <a href="#" onclick="showSubpage(event); toggleDropdown();">My Account</a>
+                        <a href="#" onclick="logout(); toggleDropdown();">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <div id="auth-panel" class="panel">
-    <h2 id="auth-title">Logowanie</h2>
-    
-    <input type="text" id="user-login" placeholder="Twój login"><br>
-    <input type="password" id="user-pass" placeholder="Twoje hasło"><br>
-    
-    <button id="auth-main-btn" onclick="wykonajAkcje()">Zaloguj się</button>
-    
-    <p style="font-size: 0.8rem; margin-top: 15px;">
-        <span id="auth-switch-text">Nie masz konta?</span> 
-        <a href="#" onclick="przelaczTryb()" id="auth-link" style="color: #f4d03f;">Zarejestruj się</a>
-    </p>
+    <!-- Landing Page Content -->
+    <div id="landing-page">
+        <section class="hero" style="background-image: url('/static/images/hero_bg.png');">
+            <div class="hero-content">
+                <h1>YOUR ADVENTURE BEGINS<br>AT UKSW ROYALE!</h1>
+                <p>Experience the Thrill of Online Gaming.<br>Register Today & Claim Your Welcome Bonus!</p>
+                <button class="btn-play-now" onclick="playNow()">PLAY NOW</button>
+            </div>
+        </section>
+
+        <section class="cards-section">
+            <div class="card popular-games">
+                <h3>POPULAR GAMES</h3>
+                <div class="games-list">
+                    <div class="game-item" onclick="alert('Coming soon!')">
+                        <img src="/static/images/slots_icon.png" alt="Mega Slots">
+                        <span>MEGA SLOTS</span>
+                    </div>
+                    <div class="game-item" onclick="openBlackjack()">
+                        <img src="/static/images/cards_icon.png" alt="Blackjack">
+                        <span>BLACKJACK</span>
+                    </div>
+                    <div class="game-item" onclick="alert('Coming soon!')">
+                        <img src="/static/images/roulette_icon.png" alt="Roulette">
+                        <span>ROULETTE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card promo top-bonuses">
+                <h3>TOP BONUSES</h3>
+                <div class="promo-content">
+                    <div class="promo-text">
+                        <h4>100% MATCH UP TO $500 + 50 FREE SPINS</h4>
+                        <button class="btn-play-now-small" onclick="playNow()">PLAY NOW</button>
+                    </div>
+                    <img src="/static/images/bonus_promo.png" alt="Bonuses">
+                </div>
+            </div>
+
+            <div class="card promo featured-promo">
+                <h3>FEATURED PROMOTION</h3>
+                <div class="promo-content">
+                    <div class="promo-text">
+                        <h4>WEEKLY TOURNAMENTS</h4>
+                        <button class="btn-play-now-small" onclick="playNow()">PLAY NOW</button>
+                    </div>
+                    <img src="/static/images/tournament_promo.png" alt="Tournaments">
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <a href="#">Responsible Gaming</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">FAQ</a>
+            <p>&copy; 2024 UKSW Royale Casino - Programming Semester Project. For demonstration purposes only.</p>
+        </footer>
     </div>
 
-    <div id="game-panel" class="panel" style="display: none;">
-    <h2 id="powitanie">Witaj!</h2>
-    <p>Twoje saldo: <span id="saldo">0</span> PLN</p>
-    <hr>
-    
-    <div id="actions" style="margin-bottom: 20px;">
-        <button id="btn-start" onclick="startGry()">ROZDAJ KARTY</button>
-        <button id="btn-hit" onclick="hit()" style="display:none; background: #e67e22;">HIT (Dobierz)</button>
-        <button id="btn-stand" onclick="stand()" style="display:none; background: #3498db;">STAND (Czekaj)</button>
+    <!-- Subpage Panel -->
+    <div id="subpage-panel" class="panel" style="display: none; margin-top: 100px;">
+        <h2>Page Under Construction</h2>
+        <p>This subpage is currently unavailable.</p>
+        <button class="secondary" style="margin-top: 20px;" onclick="showLanding()">Return to Home Page</button>
     </div>
 
-    <h3 id="komunikat" style="color: #f1c40f;"></h3>
-
-    <div class="wyniki">
-        <p>Krupier: <span id="krupier-karta">?</span> <br><small id="krupier-punkty"></small></p>
-        <p>Twoje karty: <span id="moje-karty">-</span></p>
-        <p>Punkty: <span id="moje-punkty">0</span></p>
+    <!-- All Games Page -->
+    <div id="games-page" class="panel" style="display: none; margin-top: 50px; background: transparent; border: none; box-shadow: none;">
+        <h2 style="color: #f4d03f; font-size: 2.5rem; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">ALL GAMES</h2>
+        <div class="games-list" style="justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto;">
+            <div class="game-item" onclick="openBlackjack()" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
+                <img src="/static/images/cards_icon.png" alt="Blackjack" style="width: 120px; height: 120px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem; letter-spacing: 2px;">BLACKJACK</span>
+            </div>
+            <div class="game-item" onclick="alert('Coming soon!')" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
+                <img src="/static/images/slots_icon.png" alt="Mega Slots" style="width: 120px; height: 120px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem; letter-spacing: 2px;">MEGA SLOTS</span>
+            </div>
+            <div class="game-item" onclick="alert('Coming soon!')" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
+                <img src="/static/images/roulette_icon.png" alt="Roulette" style="width: 120px; height: 120px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem; letter-spacing: 2px;">ROULETTE</span>
+            </div>
+        </div>
+        <button class="secondary" style="margin-top: 50px;" onclick="showLanding()">Return to Home Page</button>
     </div>
+
+    <!-- New Dual Auth Panel -->
+    <div id="auth-panel" class="auth-dual-panel" style="display: none;">
+        <div class="auth-header-logo">
+            <h2>UKSW ROYALE</h2>
+            <p>CASINO</p>
+        </div>
+        <div class="auth-columns">
+            <!-- Left Side: Registration -->
+            <div class="auth-column register-col">
+                <h3>REGISTRATION</h3>
+                <h4 class="auth-gold-text">OPEN AN ACCOUNT AND CLAIM<br>A WELCOME BONUS!</h4>
+                
+                <input type="text" id="reg-firstname" placeholder="First Name">
+                <input type="text" id="reg-lastname" placeholder="Last Name">
+                <input type="email" id="reg-email" placeholder="Email Address">
+                <div class="password-wrapper">
+                    <input type="password" id="reg-pass" placeholder="Create Password">
+                </div>
+                <div class="password-wrapper">
+                    <input type="password" id="reg-pass-confirm" placeholder="Confirm Password">
+                </div>
+                
+                <label class="auth-checkbox">
+                    <input type="checkbox" id="reg-terms">
+                    <span>I confirm I am 18 years or older and accept the <u>Terms and Conditions</u>.</span>
+                </label>
+                
+                <button class="btn-gold-glow" onclick="executeRegistration()">CREATE ACCOUNT NOW</button>
+            </div>
+
+            <div class="auth-divider"></div>
+
+            <!-- Right Side: Login -->
+            <div class="auth-column login-col">
+                <h3>LOGIN</h3>
+                <h4 class="auth-gold-text">WELCOME BACK!<br>LOG IN</h4>
+                
+                <input type="email" id="log-email" placeholder="Email Address">
+                <div class="password-wrapper" style="margin-bottom: 5px;">
+                    <input type="password" id="log-pass" placeholder="Password">
+                </div>
+                
+                <button class="btn-outline-gold" onclick="executeLogin()" style="margin-top: 20px;">LOG IN</button>
+                <a href="#" class="forgot-link">Forgot your password?</a>
+                
+                <!-- Decorative elements could go here if we had images -->
+            </div>
+        </div>
+        <button class="btn-close-auth" onclick="showLanding()">×</button>
     </div>
 
-    <script src="/static/script.js"></script>
+    <div id="game-panel" class="panel blackjack-panel" style="display: none; margin-top: 50px;">
+        <div class="blackjack-table">
+            <div class="table-top-bar">
+                <div class="balance-box">BALANCE: $<span id="game-balance">0.00</span></div>
+                <div class="logo-box">UKSW ROYALE<br>CASINO</div>
+                <div class="bet-box">BET: $<span id="current-bet-display">10</span></div>
+            </div>
+            
+            <div class="dealer-area">
+                <div class="label">DEALER: <span id="dealer-points"></span></div>
+                <div id="dealer-cards" class="cards-container">
+                    <!-- Dealer cards here -->
+                </div>
+            </div>
+            
+            <div class="table-center-text">
+                <h2>BLACKJACK PAYS 3:2</h2>
+                <p>DEALER MUST DRAW TO 16, STAND ON ALL 17s</p>
+                <h3 id="game-message" style="color: #f1c40f; margin-top: 15px;"></h3>
+            </div>
+            
+            <div class="player-area">
+                <div id="my-hands" class="hands-wrapper">
+                    <!-- Player hands here -->
+                </div>
+            </div>
+            
+            <div class="table-bottom-bar">
+                <div class="action-buttons">
+                    <button id="btn-hit" class="action-btn hit-btn" onclick="hit()" style="display:none;">
+                        <span class="btn-icon">♠️</span>HIT
+                    </button>
+                    <button id="btn-stand" class="action-btn stand-btn" onclick="stand()" style="display:none;">
+                        <span class="btn-icon">✋</span>STAND
+                    </button>
+                    <button id="btn-double" class="action-btn double-btn" onclick="doubleAction()" style="display:none;">
+                        <span class="btn-icon">🪙x2</span>DOUBLE
+                    </button>
+                    <button id="btn-split" class="action-btn split-btn" onclick="splitAction()" style="display:none;">
+                        <span class="btn-icon">🃏🃏</span>SPLIT
+                    </button>
+                </div>
+                
+                <div class="betting-chips" id="bet-container">
+                    <div class="bet-header">BET</div>
+                    <div class="chips-row">
+                        <div class="chip chip-5" onclick="addBet(5)">5</div>
+                        <div class="chip chip-25" onclick="addBet(25)">25</div>
+                        <div class="chip chip-100" onclick="addBet(100)">100</div>
+                        <div class="chip chip-500" onclick="addBet(500)">500</div>
+                        <button class="clear-bet-btn" onclick="clearBet()">CLEAR</button>
+                    </div>
+                    <input type="number" id="bet-amount" value="10" min="1" style="display:none;">
+                    <button id="btn-start" class="deal-btn" onclick="startGame()">DEAL</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="secondary return-home-btn" onclick="showLanding()">Return to Home Page</button>
+    </div>
+
+    <script src="/static/script.js?v=10"></script>
 </body>
 </html>

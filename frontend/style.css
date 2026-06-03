@@ -1,44 +1,862 @@
-body {
-    background: #111;
-    color: white;
-    text-align: center;
-    font-family: sans-serif;
-    padding-top: 50px;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-button {
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #f4d03f;
+body {
+    background: #0a0e17;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(10, 14, 23, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-left a, .nav-right a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.nav-left a:hover, .nav-right a:hover {
+    color: #f4d03f;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: white;
+    outline: none;
+    width: 200px;
+}
+
+.nav-logo {
+    text-align: center;
+    color: #f4d03f;
+    letter-spacing: 2px;
+}
+
+.nav-logo h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+}
+
+.nav-logo p {
+    font-size: 0.7rem;
+    margin: 0;
+    color: #e2e8f0;
+}
+
+.btn-login {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.btn-join {
+    background: #e74c3c;
+    border: none;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+.btn-join:hover {
+    background: #c0392b;
+}
+
+.hero {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    border-bottom: 2px solid #f4d03f;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(10,14,23,0.3), rgba(10,14,23,0.8));
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #f4d03f;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    color: #e2e8f0;
+}
+
+.btn-play-now {
+    background: linear-gradient(135deg, #f4d03f, #f39c12);
+    border: none;
+    color: #000;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(243, 156, 18, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-play-now:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(243, 156, 18, 0.7);
+}
+
+.cards-section {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(244, 208, 63, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(244, 208, 63, 0.6);
+}
+
+.card h3 {
+    color: #f4d03f;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(244, 208, 63, 0.2);
+    padding-bottom: 10px;
+}
+
+.games-list {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.game-item {
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    flex: 1;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: 0.2s;
+}
+
+.game-item:hover {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: #f4d03f;
+}
+
+.game-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.game-item span {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.promo-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.promo-text {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.promo-text h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.btn-play-now-small {
+    background: linear-gradient(135deg, #f4d03f, #f39c12);
+    border: none;
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-play-now-small:hover {
+    transform: scale(1.05);
+}
+
+.promo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: #06090f;
+    margin-top: 40px;
+}
+
+footer a {
+    color: #94a3b8;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: white;
+}
+
+footer p {
+    color: #64748b;
+    margin-top: 20px;
+    font-size: 0.8rem;
+}
+
+.panel {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.panel input {
+    padding: 12px;
+    margin-bottom: 15px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    font-size: 1rem;
+}
+
+.panel button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+#auth-main-btn {
+    background: #f4d03f;
+    color: #000;
+}
+
+#auth-main-btn:hover {
+    background: #f39c12;
+}
+
+.secondary {
+    background: #334155;
+    color: white;
+}
+
+.secondary:hover {
+    background: #475569;
+}
+
+#actions button {
+    width: auto;
+    padding: 10px 15px;
+    margin: 5px;
 }
 
 .wyniki {
     margin-top: 30px;
 }
 
-.panel {
-    background: #222;
-    padding: 30px;
+/* NEW DUAL AUTH PANEL STYLES */
+.auth-dual-panel {
+    background: rgba(15, 23, 42, 0.95);
+    border: 2px solid #f4d03f;
     border-radius: 15px;
-    width: 300px;
-    margin: 0 auto;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-input {
-    padding: 8px;
-    margin-bottom: 10px;
-    width: 80%;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background: #333;
+    width: 800px;
+    margin: 50px auto;
+    box-shadow: 0 0 30px rgba(244, 208, 63, 0.3), inset 0 0 20px rgba(244, 208, 63, 0.1);
+    position: relative;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: white;
 }
 
-.secondary {
-    background: #444;
-    margin-top: 5px;
+.auth-header-logo {
+    position: absolute;
+    top: -25px;
+    background: #0f172a;
+    padding: 5px 20px;
+    border: 2px solid #f4d03f;
+    border-radius: 20px;
+    text-align: center;
+    color: #f4d03f;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.auth-header-logo h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.auth-header-logo p {
+    font-size: 0.6rem;
+    margin: 0;
+}
+
+.auth-columns {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+    gap: 40px;
+}
+
+.auth-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.auth-divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(244, 208, 63, 0.5), transparent);
+}
+
+.auth-column h3 {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.auth-gold-text {
+    color: #f4d03f;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.auth-column input[type="text"],
+.auth-column input[type="password"],
+.auth-column input[type="email"] {
+    width: 100%;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.auth-column input::placeholder {
+    color: #94a3b8;
+}
+
+.password-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.auth-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    text-align: left;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.auth-checkbox input {
+    margin-top: 2px;
+}
+
+.btn-gold-glow {
+    width: 100%;
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    transition: 0.3s;
+}
+
+.btn-gold-glow:hover {
+    box-shadow: 0 0 25px rgba(243, 156, 18, 0.8);
+    transform: scale(1.02);
+}
+
+.btn-outline-gold {
+    width: 100%;
+    background: transparent;
+    border: 2px solid #f4d03f;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-outline-gold:hover {
+    background: rgba(244, 208, 63, 0.1);
+}
+
+.forgot-link {
+    color: #f4d03f;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    margin-top: 15px;
+}
+
+.btn-close-auth {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-close-auth:hover {
+    color: white;
+}
+/* Balance Badge */
+.balance-badge {
+    background: rgba(244, 208, 63, 0.1);
+    border: 1px solid rgba(244, 208, 63, 0.5);
+    color: #f4d03f;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px rgba(244, 208, 63, 0.2);
+}
+
+/* Account Dropdown */
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-account {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.btn-account:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #f4d03f;
+    color: #f4d03f;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background-color: rgba(10, 14, 23, 0.95);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(244, 208, 63, 0.1);
+    color: #f4d03f;
+}
+
+.show-dropdown {
+    display: block;
+}
+
+/* Blackjack Table Layout */
+.blackjack-panel {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 15px;
+    width: 950px;
+    max-width: 95%;
+    box-shadow: none;
+    margin: 50px auto;
+}
+
+.blackjack-table {
+    background: radial-gradient(circle at center, #1e5631 0%, #0d381c 100%);
+    border: 8px solid #c5a059;
+    border-radius: 40px;
+    padding: 20px;
+    position: relative;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.table-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.balance-box, .bet-box {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #c5a059;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: inset 0 0 10px rgba(197,160,89,0.2);
+}
+
+.logo-box {
+    color: #c5a059;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.5);
+    padding: 5px 20px;
+    border-radius: 0 0 15px 15px;
+    border: 2px solid #c5a059;
+    border-top: none;
+    margin-top: -20px;
+}
+
+.dealer-area {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.label {
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    min-height: 90px;
+}
+
+.card-visual {
+    width: 60px;
+    height: 85px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    position: relative;
+    padding: 2px;
+}
+
+.card-visual.red { color: #e74c3c; }
+.card-visual.black { color: #2c3e50; }
+
+.card-rank-top { align-self: flex-start; font-size: 14px; line-height: 1; }
+.card-suit-center { font-size: 28px; line-height: 1; margin: auto; }
+.card-rank-bottom { align-self: flex-end; font-size: 14px; line-height: 1; transform: rotate(180deg); }
+
+.table-center-text {
+    text-align: center;
+    color: #c5a059;
+    margin: 20px 0;
+}
+
+.table-center-text h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+
+.table-center-text p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.player-area {
+    text-align: center;
+}
+
+.hands-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.player-hand-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-hand-wrapper.active-hand {
+    border: 2px dashed #f1c40f;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.hand-label {
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.table-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 30px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    background: radial-gradient(circle at top, #dfb455, #8c6d23);
+    border: 2px solid #f1c40f;
+    color: #fff;
+    border-radius: 50px;
+    padding: 8px 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    transition: transform 0.1s;
+}
+
+.action-btn:hover {
+    transform: scale(1.05);
+}
+
+.action-btn .btn-icon {
+    font-size: 1.5rem;
+    margin-bottom: 3px;
+}
+
+.betting-chips {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #c5a059;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+.bet-header {
+    color: #c5a059;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chips-row {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.chip {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    border: 3px dashed #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+}
+
+.chip:hover { transform: scale(1.1); }
+.chip-5 { background: #e74c3c; color: white; }
+.chip-25 { background: #2ecc71; color: white; }
+.chip-100 { background: #34495e; color: white; }
+.chip-500 { background: #f1c40f; }
+
+.clear-bet-btn {
+    background: transparent;
+    border: 1px solid #aaa;
+    color: #aaa;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.deal-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(231,76,60,0.4);
+}
+
+.deal-btn:hover { background: #c0392b; }
+
+.return-home-btn {
+    display: block;
+    margin: 20px auto 0;
 }
