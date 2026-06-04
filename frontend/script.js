@@ -24,6 +24,14 @@ function updateView(data) {
         if (gameBalance) gameBalance.innerText = data.balance;
     }
     
+    if (data.bonus_balance !== undefined) {
+        const bonusBalanceDisplay = document.getElementById('bonus-balance-display');
+        if (bonusBalanceDisplay) bonusBalanceDisplay.innerText = data.bonus_balance;
+        
+        const gameBonusBalance = document.getElementById('game-bonus-balance');
+        if (gameBonusBalance) gameBonusBalance.innerText = data.bonus_balance;
+    }
+    
     // Update active bet display
     if (data.bets && data.bets.length > 0) {
         document.getElementById('current-bet-display').innerText = data.bets.reduce((a, b) => a + b, 0);
@@ -97,11 +105,20 @@ async function startGame() {
     const betInput = document.getElementById('bet-amount');
     let betValue = 10;
     if (betInput) betValue = parseInt(betInput.value) || 10;
+    
+    let fundSource = "real";
+    const sourceRadios = document.getElementsByName('fund-source');
+    for (let radio of sourceRadios) {
+        if (radio.checked) {
+            fundSource = radio.value;
+            break;
+        }
+    }
 
     const res = await fetch(`http://127.0.0.1:8000/start/${loggedInUser}`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bet: betValue })
+        body: JSON.stringify({ bet: betValue, fund_source: fundSource })
     });
     const data = await res.json();
     
@@ -175,37 +192,40 @@ function clearBet() {
     }
 }
 
-function showAuth() {
+function hideAllPanels() {
     document.getElementById('landing-page').style.display = 'none';
     document.getElementById('game-panel').style.display = 'none';
     document.getElementById('games-page').style.display = 'none';
-    document.getElementById('subpage-panel').style.display = 'none';
+    document.getElementById('auth-panel').style.display = 'none';
+    document.getElementById('about-page').style.display = 'none';
+    document.getElementById('support-page').style.display = 'none';
+    document.getElementById('terms-page').style.display = 'none';
+    
+    const subpagePanel = document.getElementById('subpage-panel');
+    if(subpagePanel) subpagePanel.style.display = 'none';
+    
+    const accPanel = document.getElementById('account-panel');
+    if (accPanel) accPanel.style.display = 'none';
+}
+
+function showAuth() {
+    hideAllPanels();
     document.getElementById('auth-panel').style.display = 'flex';
 }
 
 function showLanding() {
-    document.getElementById('auth-panel').style.display = 'none';
-    document.getElementById('game-panel').style.display = 'none';
-    document.getElementById('games-page').style.display = 'none';
-    document.getElementById('subpage-panel').style.display = 'none';
+    hideAllPanels();
     document.getElementById('landing-page').style.display = 'block';
 }
 
-function showSubpage(event) {
-    if(event) event.preventDefault();
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('auth-panel').style.display = 'none';
-    document.getElementById('game-panel').style.display = 'none';
-    document.getElementById('games-page').style.display = 'none';
-    document.getElementById('subpage-panel').style.display = 'block';
+function showPage(pageId) {
+    hideAllPanels();
+    document.getElementById(pageId + '-page').style.display = 'block';
 }
 
 function playNow() {
     if (loggedInUser) {
-        document.getElementById('landing-page').style.display = 'none';
-        document.getElementById('auth-panel').style.display = 'none';
-        document.getElementById('subpage-panel').style.display = 'none';
-        document.getElementById('game-panel').style.display = 'none';
+        hideAllPanels();
         document.getElementById('games-page').style.display = 'block';
     } else {
         showAuth();
@@ -214,10 +234,7 @@ function playNow() {
 
 function openBlackjack() {
     if (loggedInUser) {
-        document.getElementById('landing-page').style.display = 'none';
-        document.getElementById('auth-panel').style.display = 'none';
-        document.getElementById('subpage-panel').style.display = 'none';
-        document.getElementById('games-page').style.display = 'none';
+        hideAllPanels();
         document.getElementById('game-panel').style.display = 'block';
     } else {
         showAuth();
@@ -228,6 +245,8 @@ function logout() {
     loggedInUser = "";
     document.getElementById('user-info').style.display = 'none';
     document.getElementById('auth-buttons').style.display = 'flex';
+    const accPanel = document.getElementById('account-panel');
+    if (accPanel) accPanel.style.display = 'none';
     showLanding();
 }
 
@@ -318,6 +337,14 @@ async function executeLogin() {
             
             const gameBalance = document.getElementById('game-balance');
             if (gameBalance) gameBalance.innerText = data.balance;
+            
+            if (data.bonus_balance !== undefined) {
+                const bonusBalanceDisplay = document.getElementById('bonus-balance-display');
+                if (bonusBalanceDisplay) bonusBalanceDisplay.innerText = data.bonus_balance;
+                
+                const gameBonusBalance = document.getElementById('game-bonus-balance');
+                if (gameBonusBalance) gameBonusBalance.innerText = data.bonus_balance;
+            }
         }
     } catch (e) {
         console.error(e);
@@ -372,6 +399,14 @@ window.onload = async function() {
                 
                 const gameBalance = document.getElementById('game-balance');
                 if (gameBalance) gameBalance.innerText = data.balance;
+                
+                if (data.bonus_balance !== undefined) {
+                    const bonusBalanceDisplay = document.getElementById('bonus-balance-display');
+                    if (bonusBalanceDisplay) bonusBalanceDisplay.innerText = data.bonus_balance;
+                    
+                    const gameBonusBalance = document.getElementById('game-bonus-balance');
+                    if (gameBonusBalance) gameBonusBalance.innerText = data.bonus_balance;
+                }
 
                 if (data.game_state) {
                     document.getElementById('landing-page').style.display = 'none';
@@ -380,6 +415,9 @@ window.onload = async function() {
                     const betContainer = document.getElementById('bet-container');
                     if (betContainer) betContainer.style.display = 'none';
                     updateView(data.game_state);
+                } else if (localStorage.getItem('showAccountAfterReload') === 'true') {
+                    localStorage.removeItem('showAccountAfterReload');
+                    showAccountPanel();
                 }
             } else {
                 localStorage.removeItem("loggedInUser");
@@ -387,5 +425,227 @@ window.onload = async function() {
         } catch (e) {
             console.error("Could not restore session", e);
         }
+    }
+}
+
+/* -------------------------------------
+   ACCOUNT PANEL LOGIC
+   ------------------------------------- */
+
+function showAccountPanel() {
+    if (!loggedInUser) {
+        showAuth();
+        return;
+    }
+    hideAllPanels();
+    document.getElementById('account-panel').style.display = 'flex';
+    
+    loadAccountData();
+}
+
+function switchAccTab(tabId) {
+    const tabs = document.querySelectorAll('.acc-tab-content');
+    tabs.forEach(t => t.style.display = 'none');
+    document.getElementById(`acc-tab-${tabId}`).style.display = 'block';
+    
+    const btns = document.querySelectorAll('.acc-tab-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    if(event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+}
+
+async function loadAccountData() {
+    try {
+        const stateRes = await fetch(`http://127.0.0.1:8000/state/${loggedInUser}`);
+        const stateData = await stateRes.json();
+        
+        document.getElementById('acc-real-balance').innerText = stateData.balance;
+        document.getElementById('acc-bonus-balance').innerText = stateData.bonus_balance;
+        document.getElementById('withdraw-available').innerText = stateData.balance;
+        
+        // Update Challenges
+        const wagerTargets = [100, 300, 1000];
+        const wagerRewards = [25, 50, 150];
+        const wLvl = stateData.chal_wager_claimed;
+        const btnWager = document.getElementById('btn-claim-wager');
+        
+        if (wLvl >= wagerTargets.length) {
+            document.getElementById('chal-wager-title').innerText = "High Roller (MAX)";
+            document.getElementById('chal-wager-desc').innerText = `You have completed all High Roller challenges!`;
+            document.getElementById('chal-wager-bar').style.width = `100%`;
+            document.getElementById('chal-wager-text').innerText = `Completed`;
+            document.getElementById('chal-wager-reward').innerText = `Reward: All Claimed`;
+            btnWager.innerText = "MAX LEVEL";
+            btnWager.classList.add("claimed");
+            btnWager.disabled = true;
+        } else {
+            const wTarget = wagerTargets[wLvl];
+            const wReward = wagerRewards[wLvl];
+            const wProg = Math.min(stateData.total_wagered, wTarget);
+            document.getElementById('chal-wager-title').innerText = `High Roller Lvl ${wLvl + 1}`;
+            document.getElementById('chal-wager-desc').innerText = `Wager a total of $${wTarget} real money.`;
+            document.getElementById('chal-wager-bar').style.width = `${(wProg / wTarget) * 100}%`;
+            document.getElementById('chal-wager-text').innerText = `$${wProg} / $${wTarget}`;
+            document.getElementById('chal-wager-reward').innerText = `Reward: $${wReward} Bonus`;
+            btnWager.innerText = "CLAIM";
+            btnWager.classList.remove("claimed");
+            btnWager.disabled = wProg < wTarget;
+        }
+
+        const handsTargets = [10, 30, 100];
+        const handsRewards = [20, 40, 100];
+        const hLvl = stateData.chal_hands_claimed;
+        const btnHands = document.getElementById('btn-claim-hands');
+        
+        if (hLvl >= handsTargets.length) {
+            document.getElementById('chal-hands-title').innerText = "Blackjack Veteran (MAX)";
+            document.getElementById('chal-hands-desc').innerText = `You have completed all Veteran challenges!`;
+            document.getElementById('chal-hands-bar').style.width = `100%`;
+            document.getElementById('chal-hands-text').innerText = `Completed`;
+            document.getElementById('chal-hands-reward').innerText = `Reward: All Claimed`;
+            btnHands.innerText = "MAX LEVEL";
+            btnHands.classList.add("claimed");
+            btnHands.disabled = true;
+        } else {
+            const hTarget = handsTargets[hLvl];
+            const hReward = handsRewards[hLvl];
+            const hProg = Math.min(stateData.hands_played, hTarget);
+            document.getElementById('chal-hands-title').innerText = `BJ Veteran Lvl ${hLvl + 1}`;
+            document.getElementById('chal-hands-desc').innerText = `Play ${hTarget} hands of Blackjack.`;
+            document.getElementById('chal-hands-bar').style.width = `${(hProg / hTarget) * 100}%`;
+            document.getElementById('chal-hands-text').innerText = `${hProg} / ${hTarget} Hands`;
+            document.getElementById('chal-hands-reward').innerText = `Reward: $${hReward} Bonus`;
+            btnHands.innerText = "CLAIM";
+            btnHands.classList.remove("claimed");
+            btnHands.disabled = hProg < hTarget;
+        }
+
+        const depTargets = [1, 3, 10];
+        const depRewards = [10, 20, 50];
+        const dLvl = stateData.chal_deposit_claimed;
+        const btnDep = document.getElementById('btn-claim-deposit');
+        
+        if (dLvl >= depTargets.length) {
+            document.getElementById('chal-deposit-title').innerText = "Deposit Master (MAX)";
+            document.getElementById('chal-deposit-desc').innerText = `You have completed all Deposit challenges!`;
+            document.getElementById('chal-deposit-bar').style.width = `100%`;
+            document.getElementById('chal-deposit-text').innerText = `Completed`;
+            document.getElementById('chal-deposit-reward').innerText = `Reward: All Claimed`;
+            btnDep.innerText = "MAX LEVEL";
+            btnDep.classList.add("claimed");
+            btnDep.disabled = true;
+        } else {
+            const dTarget = depTargets[dLvl];
+            const dReward = depRewards[dLvl];
+            const dProg = Math.min(stateData.deposits_count, dTarget);
+            document.getElementById('chal-deposit-title').innerText = `Deposit Master Lvl ${dLvl + 1}`;
+            document.getElementById('chal-deposit-desc').innerText = `Make at least ${dTarget} deposit${dTarget > 1 ? 's' : ''}.`;
+            document.getElementById('chal-deposit-bar').style.width = `${(dProg / dTarget) * 100}%`;
+            document.getElementById('chal-deposit-text').innerText = `${dProg} / ${dTarget} Deposit${dTarget > 1 ? 's' : ''}`;
+            document.getElementById('chal-deposit-reward').innerText = `Reward: $${dReward} Bonus`;
+            btnDep.innerText = "CLAIM";
+            btnDep.classList.remove("claimed");
+            btnDep.disabled = dProg < dTarget;
+        }
+        
+        const histRes = await fetch(`http://127.0.0.1:8000/history/${loggedInUser}`);
+        if(histRes.ok) {
+            const histData = await histRes.json();
+            const tbody = document.getElementById('history-tbody');
+            tbody.innerHTML = '';
+            
+            histData.history.forEach(tx => {
+                let tr = document.createElement('tr');
+                let statusClass = 'status-pending';
+                if(tx.status === 'Completed') statusClass = 'status-completed';
+                if(tx.status === 'Rejected') statusClass = 'status-rejected';
+                
+                tr.innerHTML = `
+                    <td>${tx.date}</td>
+                    <td>${tx.type}</td>
+                    <td>${tx.method}</td>
+                    <td>$${tx.amount}</td>
+                    <td><span class="status-badge ${statusClass}">${tx.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    } catch (e) {
+        console.error("Error loading account data:", e);
+    }
+}
+
+async function executeDeposit() {
+    const amount = parseInt(document.getElementById('deposit-amount').value);
+    const method = document.getElementById('deposit-method').value;
+    const promo = document.getElementById('deposit-promo').value;
+    
+    if(!amount || amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+    }
+    
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/deposit/${loggedInUser}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: amount, method: method, promo_code: promo })
+        });
+        const data = await res.json();
+        if(res.ok) {
+            localStorage.setItem('showAccountAfterReload', 'true');
+            alert(data.msg);
+            window.location.href = window.location.pathname;
+        } else {
+            alert(data.detail);
+        }
+    } catch(e) {
+        console.error("Deposit error", e);
+    }
+}
+
+async function executeWithdraw() {
+    const amount = parseInt(document.getElementById('withdraw-amount').value);
+    
+    if(!amount || amount <= 0) {
+        alert("Please enter a valid amount");
+        return;
+    }
+    
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/withdraw/${loggedInUser}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: amount })
+        });
+        const data = await res.json();
+        if(res.ok) {
+            localStorage.setItem('showAccountAfterReload', 'true');
+            alert(data.msg);
+            window.location.href = window.location.pathname;
+        } else {
+            alert(data.detail || data.error);
+        }
+    } catch(e) {
+        console.error("Withdraw error", e);
+    }
+}
+
+async function claimChallenge(challengeId) {
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/claim_challenge/${loggedInUser}/${challengeId}`, {
+            method: 'POST'
+        });
+        const data = await res.json();
+        if(res.ok) {
+            alert(data.msg);
+            localStorage.setItem('showAccountAfterReload', 'true');
+            window.location.href = window.location.pathname;
+        } else {
+            alert(data.detail);
+        }
+    } catch (e) {
+        console.error("Error claiming challenge:", e);
     }
 }

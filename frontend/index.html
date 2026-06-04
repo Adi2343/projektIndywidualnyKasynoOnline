@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <title>UKSW Royale Casino</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css?v=10">
+    <link rel="stylesheet" href="/static/style.css?v=14">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-left">
             <input type="text" placeholder="Search" class="search-bar">
-            <a href="#" onclick="playNow()">GAMES</a>
-            <a href="#" onclick="showSubpage(event)">PROMOTIONS</a>
+            <a href="#" onclick="showPage('games')">GAMES</a>
+            <a href="#" onclick="showPage('terms')">TERMS OF SERVICE</a>
         </div>
         <div class="nav-logo" onclick="showLanding()" style="cursor: pointer;">
             <h2>UKSW ROYALE</h2>
             <p>CASINO</p>
         </div>
         <div class="nav-right">
-            <a href="#" onclick="showSubpage(event)">ABOUT US</a>
-            <a href="#" onclick="showSubpage(event)">SUPPORT</a>
+            <a href="#" onclick="showPage('about')">ABOUT US</a>
+            <a href="#" onclick="showPage('support')">SUPPORT</a>
             <div id="auth-buttons">
                 <button class="btn-login" onclick="showAuth()">LOG IN</button>
                 <button class="btn-join" onclick="showAuth()">JOIN NOW</button>
             </div>
             <div id="user-info" style="display: none; align-items: center; gap: 15px;">
                 <div class="balance-badge">
-                    <span id="balance-display">0</span> USD
+                    <span>REAL: $<span id="balance-display">0</span></span>
+                    <span style="margin-left: 10px; color: #f1c40f;">BONUS: $<span id="bonus-balance-display">0</span></span>
                 </div>
                 <div class="account-dropdown">
                     <button class="btn-account" onclick="toggleDropdown()">
@@ -37,7 +38,7 @@
                         </svg>
                     </button>
                     <div id="dropdown-menu" class="dropdown-content">
-                        <a href="#" onclick="showSubpage(event); toggleDropdown();">My Account</a>
+                        <a href="#" onclick="showAccountPanel(); toggleDropdown();">My Account</a>
                         <a href="#" onclick="logout(); toggleDropdown();">Logout</a>
                     </div>
                 </div>
@@ -106,11 +107,193 @@
         </footer>
     </div>
 
-    <!-- Subpage Panel -->
-    <div id="subpage-panel" class="panel" style="display: none; margin-top: 100px;">
-        <h2>Page Under Construction</h2>
-        <p>This subpage is currently unavailable.</p>
-        <button class="secondary" style="margin-top: 20px;" onclick="showLanding()">Return to Home Page</button>
+    <!-- Information Pages -->
+    <div id="about-page" class="panel info-page" style="display: none; margin-top: 100px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        <h2 style="color: #f4d03f; margin-bottom: 20px; font-size: 2.5rem;">About Us</h2>
+        <div style="background: rgba(30, 30, 40, 0.8); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <p>Welcome to UKSW Royale Casino, the premier destination for online gaming enthusiasts. Born out of a passion for high-quality entertainment, our platform was developed as a university semester project designed to push the boundaries of modern web technologies and user experience.</p>
+            <p style="margin-top: 15px;">Our mission is to provide a safe, secure, and exhilarating environment where players can enjoy classic casino games like Blackjack, alongside our innovative and dynamic Challenge system. We believe in rewarding our players, which is why our platform features tiered challenges that grow with you.</p>
+            <p style="margin-top: 15px;">At UKSW Royale Casino, fairness and transparency are at our core. While this platform serves as a demonstration, it is built with the rigor and dedication of a fully-fledged casino operation. Join us, hit the tables, and experience the thrill!</p>
+            <button class="secondary" style="margin-top: 30px;" onclick="showLanding()">Return to Home Page</button>
+        </div>
+    </div>
+
+    <div id="support-page" class="panel info-page" style="display: none; margin-top: 100px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        <h2 style="color: #f4d03f; margin-bottom: 20px; font-size: 2.5rem;">Customer Support</h2>
+        <div style="background: rgba(30, 30, 40, 0.8); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <p>Need assistance? Our support team is here to help you with any questions or issues you may encounter while enjoying UKSW Royale Casino.</p>
+            <h3 style="margin-top: 25px; color: #fff;">Contact Methods</h3>
+            <ul style="margin-left: 20px; margin-top: 10px; color: #ccc;">
+                <li><strong>Email:</strong> support@uksw-royale.edu.pl (Response within 24 hours)</li>
+                <li><strong>Live Chat:</strong> Currently offline. Check back during normal business hours.</li>
+                <li><strong>Phone:</strong> +48 123 456 789 (Mon-Fri, 9:00 AM - 5:00 PM CET)</li>
+            </ul>
+            <h3 style="margin-top: 25px; color: #fff;">Frequently Asked Questions</h3>
+            <p style="margin-top: 10px; color: #ccc;"><strong>Q: How do I withdraw my winnings?</strong><br>A: Head to "My Account", navigate to the "Finances" tab, and submit a withdrawal request. Please note that bonus funds cannot be withdrawn directly.</p>
+            <p style="margin-top: 10px; color: #ccc;"><strong>Q: Why did my challenge reset?</strong><br>A: Challenges do not reset. Once you complete a tier, it automatically levels up to provide a greater reward for a higher target!</p>
+            <button class="secondary" style="margin-top: 30px;" onclick="showLanding()">Return to Home Page</button>
+        </div>
+    </div>
+
+    <div id="terms-page" class="panel info-page" style="display: none; margin-top: 100px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        <h2 style="color: #f4d03f; margin-bottom: 20px; font-size: 2.5rem;">Terms of Service</h2>
+        <div style="background: rgba(30, 30, 40, 0.8); padding: 40px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <p>Please read these Terms of Service carefully before using the UKSW Royale Casino platform.</p>
+            <h3 style="margin-top: 20px; color: #fff;">1. Acceptance of Terms</h3>
+            <p style="color: #ccc;">By accessing or using our services, you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the service.</p>
+            <h3 style="margin-top: 20px; color: #fff;">2. Demonstration Purpose</h3>
+            <p style="color: #ccc;">This application is an academic project created for educational purposes. Real money deposits are simulated. Do not attempt to use real payment methods.</p>
+            <h3 style="margin-top: 20px; color: #fff;">3. Bonus Funds and Wagering</h3>
+            <p style="color: #ccc;">Bonus funds are awarded through the completion of Challenges or via promotional codes. Bonus funds cannot be withdrawn. They can only be used to place bets within the games provided.</p>
+            <h3 style="margin-top: 20px; color: #fff;">4. Account Termination</h3>
+            <p style="color: #ccc;">We reserve the right to terminate or suspend access to our service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+            <button class="secondary" style="margin-top: 30px;" onclick="showLanding()">Return to Home Page</button>
+        </div>
+    </div>
+
+    <!-- Account Panel -->
+    <div id="account-panel" class="account-container" style="display: none; margin-top: 80px;">
+        <div class="account-sidebar">
+            <button class="acc-tab-btn active" onclick="switchAccTab('dashboard')">Dashboard</button>
+            <button class="acc-tab-btn" onclick="switchAccTab('finances')">Finances</button>
+            <button class="acc-tab-btn" onclick="switchAccTab('challenges')">Challenges</button>
+            <button class="acc-tab-btn return-btn" onclick="showLanding()">Back to Home</button>
+        </div>
+        
+        <div class="account-content">
+            <!-- Dashboard Tab -->
+            <div id="acc-tab-dashboard" class="acc-tab-content">
+                <h2>Account Overview</h2>
+                
+                <div class="acc-balances">
+                    <div class="acc-balance-card real">
+                        <h4>Real Money</h4>
+                        <div class="amount">$<span id="acc-real-balance">0</span></div>
+                        <p>Available to withdraw</p>
+                    </div>
+                    <div class="acc-balance-card bonus">
+                        <h4>Bonus Funds</h4>
+                        <div class="amount">$<span id="acc-bonus-balance">0</span></div>
+                        <p>Requires wagering</p>
+                    </div>
+                </div>
+
+                <div class="acc-quick-actions" style="margin-top: 40px;">
+                    <button class="btn-deposit-large" onclick="switchAccTab('finances')">DEPOSIT NOW</button>
+                    <button class="btn-withdraw-large" onclick="switchAccTab('finances')">WITHDRAW</button>
+                </div>
+            </div>
+
+            <!-- Finances Tab -->
+            <div id="acc-tab-finances" class="acc-tab-content" style="display: none;">
+                <h2>Cashier</h2>
+                
+                <div class="finance-forms">
+                    <!-- Deposit Form -->
+                    <div class="finance-card">
+                        <h3>Deposit Funds</h3>
+                        <label>Payment Method</label>
+                        <select id="deposit-method">
+                            <option value="Card">Credit/Debit Card</option>
+                            <option value="BLIK">BLIK</option>
+                            <option value="Crypto">Cryptocurrency</option>
+                            <option value="Wallet">E-Wallet</option>
+                        </select>
+                        <label>Amount ($)</label>
+                        <input type="number" id="deposit-amount" placeholder="Enter amount">
+                        <label>Promo Code (Optional)</label>
+                        <input type="text" id="deposit-promo" placeholder="START for $50 bonus">
+                        <button class="btn-deposit" onclick="executeDeposit()">Process Deposit</button>
+                    </div>
+                    
+                    <!-- Withdraw Form -->
+                    <div class="finance-card">
+                        <h3>Withdraw Funds</h3>
+                        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 10px;">Available: $<span id="withdraw-available">0</span></p>
+                        <label>Amount ($)</label>
+                        <input type="number" id="withdraw-amount" placeholder="Enter amount">
+                        <button class="btn-withdraw" onclick="executeWithdraw()">Request Withdrawal</button>
+                    </div>
+                </div>
+                
+                <div class="transaction-history">
+                    <h3>Transaction History</h3>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Challenges Tab -->
+            <div id="acc-tab-challenges" class="acc-tab-content" style="display: none;">
+                <h2>Challenges & Rewards</h2>
+                <p style="color: #94a3b8; margin-bottom: 25px;">Complete tasks to earn exclusive bonus rewards!</p>
+                
+                <div class="challenges-grid">
+                    <!-- Challenge 1 -->
+                    <div class="challenge-card">
+                        <div class="chal-icon">💰</div>
+                        <div class="chal-info">
+                            <h4 id="chal-wager-title">High Roller</h4>
+                            <p id="chal-wager-desc">Wager a total of $100 real money.</p>
+                            <div class="chal-progress">
+                                <div class="chal-bar" id="chal-wager-bar" style="width: 0%;"></div>
+                            </div>
+                            <span class="chal-status" id="chal-wager-text">0 / $100</span>
+                        </div>
+                        <div class="chal-action">
+                            <span class="chal-reward" id="chal-wager-reward">Reward: $25 Bonus</span>
+                            <button id="btn-claim-wager" class="btn-claim" onclick="claimChallenge('wager')">CLAIM</button>
+                        </div>
+                    </div>
+
+                    <!-- Challenge 2 -->
+                    <div class="challenge-card">
+                        <div class="chal-icon">🃏</div>
+                        <div class="chal-info">
+                            <h4 id="chal-hands-title">Blackjack Veteran</h4>
+                            <p id="chal-hands-desc">Play 10 hands of Blackjack.</p>
+                            <div class="chal-progress">
+                                <div class="chal-bar" id="chal-hands-bar" style="width: 0%;"></div>
+                            </div>
+                            <span class="chal-status" id="chal-hands-text">0 / 10 Hands</span>
+                        </div>
+                        <div class="chal-action">
+                            <span class="chal-reward" id="chal-hands-reward">Reward: $20 Bonus</span>
+                            <button id="btn-claim-hands" class="btn-claim" onclick="claimChallenge('hands')">CLAIM</button>
+                        </div>
+                    </div>
+
+                    <!-- Challenge 3 -->
+                    <div class="challenge-card">
+                        <div class="chal-icon">🏦</div>
+                        <div class="chal-info">
+                            <h4 id="chal-deposit-title">Deposit Master</h4>
+                            <p id="chal-deposit-desc">Make at least 1 deposit of any amount.</p>
+                            <div class="chal-progress">
+                                <div class="chal-bar" id="chal-deposit-bar" style="width: 0%;"></div>
+                            </div>
+                            <span class="chal-status" id="chal-deposit-text">0 / 1 Deposit</span>
+                        </div>
+                        <div class="chal-action">
+                            <span class="chal-reward" id="chal-deposit-reward">Reward: $10 Bonus</span>
+                            <button id="btn-claim-deposit" class="btn-claim" onclick="claimChallenge('deposit')">CLAIM</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- All Games Page -->
@@ -187,7 +370,7 @@
     <div id="game-panel" class="panel blackjack-panel" style="display: none; margin-top: 50px;">
         <div class="blackjack-table">
             <div class="table-top-bar">
-                <div class="balance-box">BALANCE: $<span id="game-balance">0.00</span></div>
+                <div class="balance-box">REAL: $<span id="game-balance">0.00</span> | BONUS: $<span id="game-bonus-balance">0.00</span></div>
                 <div class="logo-box">UKSW ROYALE<br>CASINO</div>
                 <div class="bet-box">BET: $<span id="current-bet-display">10</span></div>
             </div>
@@ -229,15 +412,27 @@
                 
                 <div class="betting-chips" id="bet-container">
                     <div class="bet-header">BET</div>
+                    <div class="fund-selector-container">
+                        <label>
+                            <input type="radio" name="fund-source" value="real" class="fund-btn-radio" checked>
+                            <div class="fund-btn-label">REAL MONEY</div>
+                        </label>
+                        <label>
+                            <input type="radio" name="fund-source" value="bonus" class="fund-btn-radio">
+                            <div class="fund-btn-label">BONUS MONEY</div>
+                        </label>
+                    </div>
                     <div class="chips-row">
                         <div class="chip chip-5" onclick="addBet(5)">5</div>
                         <div class="chip chip-25" onclick="addBet(25)">25</div>
                         <div class="chip chip-100" onclick="addBet(100)">100</div>
                         <div class="chip chip-500" onclick="addBet(500)">500</div>
-                        <button class="clear-bet-btn" onclick="clearBet()">CLEAR</button>
                     </div>
-                    <input type="number" id="bet-amount" value="10" min="1" style="display:none;">
-                    <button id="btn-start" class="deal-btn" onclick="startGame()">DEAL</button>
+                    <div class="action-row">
+                        <button class="clear-bet-btn" onclick="clearBet()">CLEAR</button>
+                        <input type="number" id="bet-amount" value="10" min="1" style="display:none;">
+                        <button id="btn-start" class="deal-btn" onclick="startGame()">DEAL</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -245,6 +440,6 @@
         <button class="secondary return-home-btn" onclick="showLanding()">Return to Home Page</button>
     </div>
 
-    <script src="/static/script.js?v=10"></script>
+    <script src="/static/script.js?v=13"></script>
 </body>
 </html>
