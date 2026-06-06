@@ -121,7 +121,7 @@ async function startGame() {
         }
     }
 
-    const res = await fetch(`http://127.0.0.1:8000/start/${loggedInUser}`, { 
+    const res = await fetch(`/start/${loggedInUser}`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bet: betValue, fund_source: fundSource })
@@ -140,20 +140,20 @@ async function startGame() {
 }
 
 async function hit() {
-    const res = await fetch(`http://127.0.0.1:8000/hit/${loggedInUser}`, { method: 'POST' });
+    const res = await fetch(`/hit/${loggedInUser}`, { method: 'POST' });
     const data = await res.json();
     updateView(data);
 }
 
 async function stand() {
-    const res = await fetch(`http://127.0.0.1:8000/stand/${loggedInUser}`, { method: 'POST' });
+    const res = await fetch(`/stand/${loggedInUser}`, { method: 'POST' });
     const data = await res.json();
     updateView(data);
 }
 
 async function doubleAction() {
     try {
-        const res = await fetch(`http://127.0.0.1:8000/double/${loggedInUser}`, { method: 'POST' });
+        const res = await fetch(`/double/${loggedInUser}`, { method: 'POST' });
         const data = await res.json();
         if (res.status === 400) alert(data.detail);
         else updateView(data);
@@ -162,7 +162,7 @@ async function doubleAction() {
 
 async function splitAction() {
     try {
-        const res = await fetch(`http://127.0.0.1:8000/split/${loggedInUser}`, { method: 'POST' });
+        const res = await fetch(`/split/${loggedInUser}`, { method: 'POST' });
         const data = await res.json();
         if (res.status === 400) alert(data.detail);
         else updateView(data);
@@ -296,7 +296,7 @@ async function executeRegistration() {
     }
 
     try {
-        const res = await fetch(`http://127.0.0.1:8000/register`, {
+        const res = await fetch(`/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ first_name: firstName, last_name: lastName, email: email, password: pass })
@@ -329,7 +329,7 @@ async function executeLogin() {
     }
 
     try {
-        const res = await fetch(`http://127.0.0.1:8000/login`, {
+        const res = await fetch(`/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: pass })
@@ -402,7 +402,7 @@ window.onload = async function() {
     const savedUser = localStorage.getItem("loggedInUser");
     if (savedUser) {
         try {
-            const res = await fetch(`http://127.0.0.1:8000/state/${savedUser}`);
+            const res = await fetch(`/state/${savedUser}`);
             if (res.ok) {
                 const data = await res.json();
                 loggedInUser = data.email;
@@ -482,7 +482,7 @@ function switchAccTab(tabId) {
 
 async function loadAccountData() {
     try {
-        const stateRes = await fetch(`http://127.0.0.1:8000/state/${loggedInUser}`);
+        const stateRes = await fetch(`/state/${loggedInUser}`);
         const stateData = await stateRes.json();
         
         document.getElementById('acc-real-balance').innerText = stateData.balance;
@@ -574,7 +574,7 @@ async function loadAccountData() {
             btnDep.disabled = dProg < dTarget;
         }
         
-        const histRes = await fetch(`http://127.0.0.1:8000/history/${loggedInUser}`);
+        const histRes = await fetch(`/history/${loggedInUser}`);
         if(histRes.ok) {
             const histData = await histRes.json();
             const tbody = document.getElementById('history-tbody');
@@ -612,7 +612,7 @@ async function executeDeposit() {
     }
     
     try {
-        const res = await fetch(`http://127.0.0.1:8000/deposit/${loggedInUser}`, {
+        const res = await fetch(`/deposit/${loggedInUser}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ amount: amount, method: method, promo_code: promo })
@@ -639,7 +639,7 @@ async function executeWithdraw() {
     }
     
     try {
-        const res = await fetch(`http://127.0.0.1:8000/withdraw/${loggedInUser}`, {
+        const res = await fetch(`/withdraw/${loggedInUser}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ amount: amount })
@@ -659,7 +659,7 @@ async function executeWithdraw() {
 
 async function claimChallenge(challengeId) {
     try {
-        const res = await fetch(`http://127.0.0.1:8000/claim_challenge/${loggedInUser}/${challengeId}`, {
+        const res = await fetch(`/claim_challenge/${loggedInUser}/${challengeId}`, {
             method: 'POST'
         });
         const data = await res.json();
@@ -786,7 +786,7 @@ async function spinRoulette() {
     document.getElementById('roulette-message').innerHTML = '';
 
     try {
-        const res = await fetch(`http://127.0.0.1:8000/roulette/spin/${loggedInUser}`, { 
+        const res = await fetch(`/roulette/spin/${loggedInUser}`, { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ bet_amount: betValue, fund_source: fundSource, bet_type: betType, bet_number: betNumber })
