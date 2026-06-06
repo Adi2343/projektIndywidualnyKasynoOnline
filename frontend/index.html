@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <title>UKSW Royale Casino</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css?v=14">
+    <link rel="stylesheet" href="/static/style.css?v=15">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-left">
-            <input type="text" placeholder="Search" class="search-bar">
             <a href="#" onclick="showPage('games')">GAMES</a>
             <a href="#" onclick="showPage('terms')">TERMS OF SERVICE</a>
         </div>
@@ -60,15 +59,11 @@
             <div class="card popular-games">
                 <h3>POPULAR GAMES</h3>
                 <div class="games-list">
-                    <div class="game-item" onclick="alert('Coming soon!')">
-                        <img src="/static/images/slots_icon.png" alt="Mega Slots">
-                        <span>MEGA SLOTS</span>
-                    </div>
                     <div class="game-item" onclick="openBlackjack()">
                         <img src="/static/images/cards_icon.png" alt="Blackjack">
                         <span>BLACKJACK</span>
                     </div>
-                    <div class="game-item" onclick="alert('Coming soon!')">
+                    <div class="game-item" onclick="openRoulette()">
                         <img src="/static/images/roulette_icon.png" alt="Roulette">
                         <span>ROULETTE</span>
                     </div>
@@ -304,11 +299,7 @@
                 <img src="/static/images/cards_icon.png" alt="Blackjack" style="width: 120px; height: 120px; margin-bottom: 20px;">
                 <span style="font-size: 1.5rem; letter-spacing: 2px;">BLACKJACK</span>
             </div>
-            <div class="game-item" onclick="alert('Coming soon!')" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
-                <img src="/static/images/slots_icon.png" alt="Mega Slots" style="width: 120px; height: 120px; margin-bottom: 20px;">
-                <span style="font-size: 1.5rem; letter-spacing: 2px;">MEGA SLOTS</span>
-            </div>
-            <div class="game-item" onclick="alert('Coming soon!')" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
+            <div class="game-item" onclick="openRoulette()" style="width: 250px; height: 250px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 20px;">
                 <img src="/static/images/roulette_icon.png" alt="Roulette" style="width: 120px; height: 120px; margin-bottom: 20px;">
                 <span style="font-size: 1.5rem; letter-spacing: 2px;">ROULETTE</span>
             </div>
@@ -440,6 +431,73 @@
         <button class="secondary return-home-btn" onclick="showLanding()">Return to Home Page</button>
     </div>
 
-    <script src="/static/script.js?v=13"></script>
+    <!-- Roulette Panel -->
+    <div id="roulette-panel" class="panel roulette-panel" style="display: none; margin-top: 50px;">
+        <div class="blackjack-table" style="background: radial-gradient(circle at center, #8e0000 0%, #3a0000 100%);">
+            <div class="table-top-bar">
+                <div class="balance-box">REAL: $<span id="roulette-balance">0.00</span> | BONUS: $<span id="roulette-bonus-balance">0.00</span></div>
+                <div class="logo-box">UKSW ROYALE<br>CASINO</div>
+                <div class="bet-box">BET: $<span id="roulette-current-bet-display">10</span></div>
+            </div>
+            
+            <div class="table-center-text" style="margin-top: 20px;">
+                <h2 style="margin-bottom: 20px;">ROULETTE</h2>
+                
+                <!-- Horizontal Roulette Wheel -->
+                <div class="roulette-wheel-wrapper" style="position:relative; width: 100%; max-width: 800px; height: 80px; margin: 0 auto 10px auto; border: 3px solid #c5a059; border-radius: 10px; overflow: hidden; background: #1a1a1a; box-shadow: inset 0 0 15px rgba(0,0,0,0.8);">
+                    <!-- Center Line -->
+                    <div class="roulette-selector-line" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: rgba(255,255,255,0.8); z-index: 10; transform: translateX(-50%); box-shadow: 0 0 10px white;">
+                        <div style="position: absolute; top: -2px; left: -6px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid white;"></div>
+                        <div style="position: absolute; bottom: -2px; left: -6px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid white;"></div>
+                    </div>
+                    <!-- Strip Container -->
+                    <div id="roulette-wheel-strip" style="display: flex; height: 100%; transform: translateX(0px); transition: transform 4s cubic-bezier(0.1, 0.9, 0.2, 1); width: max-content;">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+                
+                <h3 id="roulette-message" style="color: #f1c40f; margin-top: 10px; font-size: 1.5rem; min-height: 35px;"></h3>
+            </div>
+            
+            <div class="roulette-betting-area" style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 20px; border: 2px solid #c5a059; margin-top: 10px; max-width: 850px; margin-left: auto; margin-right: auto; width: 100%;">
+                
+                <!-- Betting Board Container -->
+                <div id="roulette-board" class="roulette-board-container" style="margin-bottom: 20px; user-select: none;">
+                    <!-- Generated by JS -->
+                </div>
+                
+                <!-- Hidden inputs to store bet -->
+                <input type="hidden" id="roulette-bet-type" value="">
+                <input type="hidden" id="roulette-bet-number" value="-1">
+
+                <div class="fund-selector-container">
+                    <label>
+                        <input type="radio" name="roulette-fund-source" value="real" class="fund-btn-radio" checked>
+                        <div class="fund-btn-label">REAL MONEY</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="roulette-fund-source" value="bonus" class="fund-btn-radio">
+                        <div class="fund-btn-label">BONUS MONEY</div>
+                    </label>
+                </div>
+                
+                <div class="chips-row">
+                    <div class="chip chip-5" onclick="addRouletteBet(5)">5</div>
+                    <div class="chip chip-25" onclick="addRouletteBet(25)">25</div>
+                    <div class="chip chip-100" onclick="addRouletteBet(100)">100</div>
+                    <div class="chip chip-500" onclick="addRouletteBet(500)">500</div>
+                </div>
+                
+                <div class="action-row">
+                    <button class="clear-bet-btn" onclick="clearRouletteBet()">CLEAR</button>
+                    <input type="number" id="roulette-bet-amount" value="10" min="1" style="display:none;">
+                    <button id="btn-spin-roulette" class="deal-btn" onclick="spinRoulette()">SPIN</button>
+                </div>
+            </div>
+        </div>
+        <button class="secondary return-home-btn" onclick="showLanding()">Return to Home Page</button>
+    </div>
+
+    <script src="/static/script.js?v=14"></script>
 </body>
 </html>

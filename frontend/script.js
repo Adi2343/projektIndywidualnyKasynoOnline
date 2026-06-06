@@ -22,6 +22,9 @@ function updateView(data) {
         
         const gameBalance = document.getElementById('game-balance');
         if (gameBalance) gameBalance.innerText = data.balance;
+        
+        const rouletteBalance = document.getElementById('roulette-balance');
+        if (rouletteBalance) rouletteBalance.innerText = data.balance;
     }
     
     if (data.bonus_balance !== undefined) {
@@ -30,6 +33,9 @@ function updateView(data) {
         
         const gameBonusBalance = document.getElementById('game-bonus-balance');
         if (gameBonusBalance) gameBonusBalance.innerText = data.bonus_balance;
+        
+        const rouletteBonusBalance = document.getElementById('roulette-bonus-balance');
+        if (rouletteBonusBalance) rouletteBonusBalance.innerText = data.bonus_balance;
     }
     
     // Update active bet display
@@ -200,6 +206,7 @@ function hideAllPanels() {
     document.getElementById('about-page').style.display = 'none';
     document.getElementById('support-page').style.display = 'none';
     document.getElementById('terms-page').style.display = 'none';
+    document.getElementById('roulette-panel').style.display = 'none';
     
     const subpagePanel = document.getElementById('subpage-panel');
     if(subpagePanel) subpagePanel.style.display = 'none';
@@ -239,6 +246,21 @@ function openBlackjack() {
     } else {
         showAuth();
     }
+}
+
+function openRoulette() {
+    if (loggedInUser) {
+        hideAllPanels();
+        document.getElementById('roulette-panel').style.display = 'block';
+        updateRouletteBalanceUI();
+    } else {
+        showAuth();
+    }
+}
+
+function updateRouletteBalanceUI() {
+    document.getElementById('roulette-balance').innerText = document.getElementById('acc-real-balance') ? document.getElementById('acc-real-balance').innerText : '0';
+    document.getElementById('roulette-bonus-balance').innerText = document.getElementById('acc-bonus-balance') ? document.getElementById('acc-bonus-balance').innerText : '0';
 }
 
 function logout() {
@@ -426,6 +448,9 @@ window.onload = async function() {
             console.error("Could not restore session", e);
         }
     }
+    
+    initRouletteBoard();
+    initRouletteWheel();
 }
 
 /* -------------------------------------
@@ -647,5 +672,180 @@ async function claimChallenge(challengeId) {
         }
     } catch (e) {
         console.error("Error claiming challenge:", e);
+    }
+}
+
+/* -------------------------------------
+   ROULETTE LOGIC
+   ------------------------------------- */
+
+const ROULETTE_NUMBERS = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+const RED_NUMS = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+
+function initRouletteBoard() {
+    const board = document.getElementById('roulette-board');
+    if (!board) return;
+    board.innerHTML = '';
+    
+    const boardHtml = [];
+    boardHtml.push(`<div class="board-cell board-zero" onclick="selectRouletteBet('number', 0, this)">0</div>`);
+    
+    const rows = [
+        [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
+        [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
+        [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+    ];
+    
+    rows.forEach((row, rowIndex) => {
+        row.forEach((num, colIndex) => {
+            const colorClass = RED_NUMS.includes(num) ? 'board-red' : 'board-black';
+            boardHtml.push(`<div class="board-cell ${colorClass}" style="grid-row: ${rowIndex + 1}; grid-column: ${colIndex + 2};" onclick="selectRouletteBet('number', ${num}, this)">${num}</div>`);
+        });
+    });
+    
+    boardHtml.push(`<div class="board-cell board-special" style="grid-row: 4; grid-column: 2 / 4;" onclick="selectRouletteBet('low', -1, this)">1-18</div>`);
+    boardHtml.push(`<div class="board-cell board-special" style="grid-row: 4; grid-column: 4 / 6;" onclick="selectRouletteBet('even', -1, this)">EVEN</div>`);
+    boardHtml.push(`<div class="board-cell board-special board-red" style="grid-row: 4; grid-column: 6 / 8;" onclick="selectRouletteBet('red', -1, this)">RED</div>`);
+    boardHtml.push(`<div class="board-cell board-special board-black" style="grid-row: 4; grid-column: 8 / 10;" onclick="selectRouletteBet('black', -1, this)">BLACK</div>`);
+    boardHtml.push(`<div class="board-cell board-special" style="grid-row: 4; grid-column: 10 / 12;" onclick="selectRouletteBet('odd', -1, this)">ODD</div>`);
+    boardHtml.push(`<div class="board-cell board-special" style="grid-row: 4; grid-column: 12 / 14;" onclick="selectRouletteBet('high', -1, this)">19-36</div>`);
+    
+    board.innerHTML = boardHtml.join('');
+}
+
+function initRouletteWheel() {
+    const strip = document.getElementById('roulette-wheel-strip');
+    if (!strip) return;
+    strip.innerHTML = '';
+    
+    for (let i = 0; i < 5; i++) {
+        ROULETTE_NUMBERS.forEach(num => {
+            const div = document.createElement('div');
+            div.className = 'roulette-wheel-strip-item';
+            if (num === 0) div.classList.add('wheel-green');
+            else if (RED_NUMS.includes(num)) div.classList.add('wheel-red');
+            else div.classList.add('wheel-black');
+            div.innerText = num;
+            strip.appendChild(div);
+        });
+    }
+}
+
+function selectRouletteBet(type, number, element) {
+    document.getElementById('roulette-bet-type').value = type;
+    document.getElementById('roulette-bet-number').value = number;
+    
+    document.querySelectorAll('.board-cell').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function addRouletteBet(amount) {
+    const betInput = document.getElementById('roulette-bet-amount');
+    if (betInput) {
+        let current = parseInt(betInput.value) || 0;
+        betInput.value = current + amount;
+        document.getElementById('roulette-current-bet-display').innerText = betInput.value;
+    }
+}
+
+function clearRouletteBet() {
+    const betInput = document.getElementById('roulette-bet-amount');
+    if (betInput) {
+        betInput.value = 0;
+        document.getElementById('roulette-current-bet-display').innerText = 0;
+    }
+}
+
+async function spinRoulette() {
+    const betInput = document.getElementById('roulette-bet-amount');
+    let betValue = parseInt(betInput.value) || 0;
+    
+    if (betValue <= 0) {
+        alert("Please place a bet!");
+        return;
+    }
+
+    const betType = document.getElementById('roulette-bet-type').value;
+    if (!betType) {
+        alert("Please select a bet from the board!");
+        return;
+    }
+
+    let fundSource = "real";
+    const sourceRadios = document.getElementsByName('roulette-fund-source');
+    for (let radio of sourceRadios) {
+        if (radio.checked) {
+            fundSource = radio.value;
+            break;
+        }
+    }
+
+    let betNumber = parseInt(document.getElementById('roulette-bet-number').value);
+
+    document.getElementById('btn-spin-roulette').disabled = true;
+    document.getElementById('roulette-message').innerHTML = '';
+
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/roulette/spin/${loggedInUser}`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bet_amount: betValue, fund_source: fundSource, bet_type: betType, bet_number: betNumber })
+        });
+        const data = await res.json();
+        
+        if (res.status === 400 || res.status === 404) {
+            alert(data.detail);
+            document.getElementById('btn-spin-roulette').disabled = false;
+            return;
+        }
+        
+        // Immediately subtract bet visually
+        const intermediateBalance = fundSource === 'real' ? data.balance - data.winnings : data.balance;
+        const intermediateBonus = fundSource === 'bonus' ? data.bonus_balance - data.winnings : data.bonus_balance;
+        
+        document.getElementById('roulette-balance').innerText = intermediateBalance;
+        document.getElementById('roulette-bonus-balance').innerText = intermediateBonus;
+        document.getElementById('balance-display').innerText = intermediateBalance;
+        document.getElementById('bonus-balance-display').innerText = intermediateBonus;
+        document.getElementById('game-balance').innerText = intermediateBalance;
+        document.getElementById('game-bonus-balance').innerText = intermediateBonus;
+
+        const strip = document.getElementById('roulette-wheel-strip');
+        const wrapper = document.querySelector('.roulette-wheel-wrapper');
+        const itemWidth = 60;
+        
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateX(0px)';
+        void strip.offsetWidth; // force reflow
+        
+        const targetIdx = (37 * 3) + ROULETTE_NUMBERS.indexOf(data.winning_number);
+        const randomOffset = Math.floor(Math.random() * 40) - 20;
+        const finalTranslate = -(targetIdx * itemWidth) + (wrapper.offsetWidth / 2) - (itemWidth / 2) + randomOffset;
+        
+        strip.style.transition = 'transform 4s cubic-bezier(0.1, 0.9, 0.2, 1)';
+        strip.style.transform = `translateX(${finalTranslate}px)`;
+
+        setTimeout(() => {
+            if (data.win) {
+                document.getElementById('roulette-message').innerHTML = `YOU WON $${data.winnings}!`;
+            } else {
+                document.getElementById('roulette-message').innerHTML = `YOU LOST!`;
+            }
+            
+            // Final balance update
+            document.getElementById('roulette-balance').innerText = data.balance;
+            document.getElementById('roulette-bonus-balance').innerText = data.bonus_balance;
+            document.getElementById('balance-display').innerText = data.balance;
+            document.getElementById('bonus-balance-display').innerText = data.bonus_balance;
+            document.getElementById('game-balance').innerText = data.balance;
+            document.getElementById('game-bonus-balance').innerText = data.bonus_balance;
+            
+            document.getElementById('btn-spin-roulette').disabled = false;
+        }, 4500);
+
+    } catch (e) {
+        console.error(e);
+        document.getElementById('btn-spin-roulette').disabled = false;
+        alert("Server error during spin!");
     }
 }

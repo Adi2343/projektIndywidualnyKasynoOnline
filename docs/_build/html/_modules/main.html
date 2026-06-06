@@ -1,0 +1,1221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main &mdash; UKSW Royale Casino 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UKSW Royale Casino
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">KasynoOnline</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UKSW Royale Casino</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for main</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORSMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.staticfiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticFiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">,</span> <span class="n">DateTime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.ext.declarative</span><span class="w"> </span><span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span><span class="p">,</span> <span class="n">relationship</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1">####### DATABASE #######</span>
+<span class="c1"># Create the SQLite database engine. We disable the same-thread check </span>
+<span class="c1"># so FastAPI can handle multiple concurrent requests smoothly.</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;sqlite:///./kasyno.db&quot;</span><span class="p">,</span> <span class="n">connect_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;check_same_thread&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="n">SessionLocal</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<div class="viewcode-block" id="User">
+<a class="viewcode-back" href="../main.html#main.User">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Database model representing a user (player).</span>
+<span class="sd">    Stores authentication data, balances (real and bonus), and challenge progression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    
+    <span class="c1"># Financial balances</span>
+    <span class="n">balance</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">bonus_balance</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span> <span class="c1"># Give 200 bonus chips initially for testing!</span>
+    
+    <span class="c1"># Challenge statistics</span>
+    <span class="n">total_wagered</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">hands_played</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">deposits_count</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Tracking the claimed reward tiers</span>
+    <span class="n">chal_wager_claimed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">chal_hands_claimed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">chal_deposit_claimed</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">transactions</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Transaction&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Transaction">
+<a class="viewcode-back" href="../main.html#main.Transaction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Transaction</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Database model representing a single financial transaction.</span>
+<span class="sd">    Used for logging deposits, withdrawals, and challenge rewards.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;transactions&quot;</span>
+    
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;users.id&quot;</span><span class="p">))</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="c1"># e.g. &#39;Deposit&#39;, &#39;Withdrawal&#39;, &#39;Challenge Reward&#39;</span>
+    <span class="n">amount</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="c1"># e.g. &#39;Completed&#39;, &#39;Pending&#39;</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    
+    <span class="n">user</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;transactions&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Automatically create all tables defined in classes inheriting from Base,</span>
+<span class="c1"># if they do not exist already.</span>
+<span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+
+
+<span class="c1">####### DATA MODELS (PYDANTIC) #######</span>
+<span class="c1"># Used to validate incoming data from the client (frontend) to the API.</span>
+
+<div class="viewcode-block" id="UserAuth">
+<a class="viewcode-back" href="../main.html#main.UserAuth">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserAuth</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for user login.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        email (str): Email address.</span>
+<span class="sd">        password (str): Password.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="UserRegister">
+<a class="viewcode-back" href="../main.html#main.UserRegister">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserRegister</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for registering a new user.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        first_name (str): First name.</span>
+<span class="sd">        last_name (str): Last name.</span>
+<span class="sd">        email (str): Email address.</span>
+<span class="sd">        password (str): Password.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="BetRequest">
+<a class="viewcode-back" href="../main.html#main.BetRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BetRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for placing a bet (e.g., in Blackjack).</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        bet (int): Wager amount.</span>
+<span class="sd">        fund_source (str): Source of funds (&quot;real&quot; or &quot;bonus&quot;). Defaults to &quot;real&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bet</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">fund_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;real&quot;</span></div>
+
+
+<div class="viewcode-block" id="PaymentRequest">
+<a class="viewcode-back" href="../main.html#main.PaymentRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PaymentRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for deposit requests.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        amount (int): Amount to deposit.</span>
+<span class="sd">        method (str): Payment method (e.g., &quot;Card&quot;, &quot;BLIK&quot;).</span>
+<span class="sd">        promo_code (str): Optional promo code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">promo_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="WithdrawRequest">
+<a class="viewcode-back" href="../main.html#main.WithdrawRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WithdrawRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for withdrawal requests.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        amount (int): Amount to withdraw.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="RouletteBetRequest">
+<a class="viewcode-back" href="../main.html#main.RouletteBetRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RouletteBetRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model for placing a bet in Roulette.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        bet_amount (int): Wager amount.</span>
+<span class="sd">        fund_source (str): Source of funds (&quot;real&quot; or &quot;bonus&quot;).</span>
+<span class="sd">        bet_type (str): Type of bet (&quot;red&quot;, &quot;black&quot;, &quot;even&quot;, &quot;odd&quot;, &quot;low&quot;, &quot;high&quot;, &quot;number&quot;).</span>
+<span class="sd">        bet_number (int): Chosen number (if bet_type is &quot;number&quot;). Defaults to -1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bet_amount</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">fund_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;real&quot;</span>
+    <span class="n">bet_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">bet_number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+
+
+<span class="c1">######## FASTAPI CONFIGURATION ########</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="c1"># Allow cross-origin requests (CORS) from any origin to ease local testing</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Mount the static &quot;frontend&quot; directory to serve CSS, JS, and images</span>
+<span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">frontend_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;frontend&quot;</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/static&quot;</span><span class="p">,</span> <span class="n">StaticFiles</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">frontend_dir</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">)</span>
+
+<span class="c1"># Simple dictionary holding active game sessions in server memory.</span>
+<span class="c1"># The key is the user&#39;s email, the value is a dictionary with the current game state.</span>
+<span class="n">game_sessions</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="create_deck">
+<a class="viewcode-back" href="../main.html#main.create_deck">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_deck</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates and shuffles a standard 52-card deck (e.g., for Blackjack).</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A shuffled list of strings representing cards (e.g., [&#39;2♠&#39;, &#39;K♥&#39;, &#39;A♣&#39;, ...]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ranks</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">]</span>
+    <span class="n">suits</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;♠&#39;</span><span class="p">,</span> <span class="s1">&#39;♣&#39;</span><span class="p">,</span> <span class="s1">&#39;♥&#39;</span><span class="p">,</span> <span class="s1">&#39;♦&#39;</span><span class="p">]</span>
+    
+    <span class="n">deck</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Loop through suits and ranks to create the 52 combinations</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suits</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
+            <span class="n">deck</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+            
+    <span class="c1"># Give the deck a good shuffle before dealing</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deck</span></div>
+
+
+<div class="viewcode-block" id="calculate_points">
+<a class="viewcode-back" href="../main.html#main.calculate_points">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_points</span><span class="p">(</span><span class="n">hand</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the total points for a given Blackjack hand.</span>
+<span class="sd">    An Ace counts as 11, unless the total exceeds 21, in which case it counts as 1.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        hand (list): A list of card strings belonging to the player or dealer.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The optimized point total for the provided hand.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">aces</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Dictionary translating card ranks into point values</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;2&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">:</span><span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+        <span class="s1">&#39;J&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">11</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">card</span> <span class="ow">in</span> <span class="n">hand</span><span class="p">:</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">card</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Strip the suit (last character), keep the rank</span>
+        <span class="n">points</span> <span class="o">+=</span> <span class="n">values</span><span class="p">[</span><span class="n">rank</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+            <span class="n">aces</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+    <span class="c1"># If we bust (over 21) but have an Ace, we save the situation by counting the Ace as 1</span>
+    <span class="k">while</span> <span class="n">points</span> <span class="o">&gt;</span> <span class="mi">21</span> <span class="ow">and</span> <span class="n">aces</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">-=</span> <span class="mi">10</span>
+        <span class="n">aces</span> <span class="o">-=</span> <span class="mi">1</span>
+        
+    <span class="k">return</span> <span class="n">points</span></div>
+
+
+<div class="viewcode-block" id="main_page">
+<a class="viewcode-back" href="../main.html#main.main_page">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main_page</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint serving the main HTML page.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        FileResponse: Response containing the index.html file, bypassing browser cache.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">FileResponse</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;frontend&#39;</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">))</span>
+    <span class="c1"># Prevent caching so the browser always loads our latest changes</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Cache-Control&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;no-cache, no-store, must-revalidate&quot;</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Pragma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;no-cache&quot;</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Expires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="register">
+<a class="viewcode-back" href="../main.html#main.register">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/register&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">UserRegister</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint for registering a new player.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        data (UserRegister): Form data received for registration.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A success message or an error if the email is already taken.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">existing_user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">data</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="c1"># Validation - an email can only be used once</span>
+    <span class="k">if</span> <span class="n">existing_user</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;This email is already taken!&quot;</span><span class="p">}</span>
+    
+    <span class="c1"># Create the new user and grant them 200 bonus chips as a welcome gift</span>
+    <span class="n">new_player</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+        <span class="n">first_name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> 
+        <span class="n">last_name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> 
+        <span class="n">email</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> 
+        <span class="n">password</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> 
+        <span class="n">balance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+        <span class="n">bonus_balance</span><span class="o">=</span><span class="mi">200</span>
+    <span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_player</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Account created! You can now log in.&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="login">
+<a class="viewcode-back" href="../main.html#main.login">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">UserAuth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint for user login.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        data (UserAuth): Login credentials (email, password).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Account details upon successful login or an error message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="c1"># Find the player using the exact email and password (plain text check - good enough for a student project!)</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">data</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">password</span> <span class="o">==</span> <span class="n">data</span><span class="o">.</span><span class="n">password</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">player</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Logged in!&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> 
+            <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> 
+            <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span><span class="p">,</span> 
+            <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid email or password!&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_state">
+<a class="viewcode-back" href="../main.html#main.get_state">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/state/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the full account state of a player, including any active game session.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If the player does not exist.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A summary of balances, challenge stats, and the current active game state (if any).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player not found&quot;</span><span class="p">)</span>
+        
+    <span class="n">game_state</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Attach the game state so the user can resume a Blackjack hand (e.g., after refreshing the page)</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">in</span> <span class="n">game_sessions</span><span class="p">:</span>
+        <span class="n">game_state</span> <span class="o">=</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">],</span> <span class="n">email</span><span class="p">)</span>
+        
+    <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+        <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+        <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span><span class="p">,</span>
+        <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span><span class="p">,</span>
+        <span class="s2">&quot;total_wagered&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">total_wagered</span><span class="p">,</span>
+        <span class="s2">&quot;hands_played&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">hands_played</span><span class="p">,</span>
+        <span class="s2">&quot;deposits_count&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">deposits_count</span><span class="p">,</span>
+        <span class="s2">&quot;chal_wager_claimed&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_wager_claimed</span><span class="p">,</span>
+        <span class="s2">&quot;chal_hands_claimed&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_hands_claimed</span><span class="p">,</span>
+        <span class="s2">&quot;chal_deposit_claimed&quot;</span><span class="p">:</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_deposit_claimed</span><span class="p">,</span>
+        <span class="s2">&quot;game_state&quot;</span><span class="p">:</span> <span class="n">game_state</span>
+    <span class="p">}</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="get_game_state">
+<a class="viewcode-back" href="../main.html#main.get_game_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_game_state</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to build an object representing the current Blackjack game state.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        session (dict): The active game session for the user.</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A parsed object detailing cards on the table, point totals, and wager amounts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="k">if</span> <span class="n">player</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">bonus_balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="k">if</span> <span class="n">player</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;finished&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">calculate_points</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]],</span>
+        <span class="s2">&quot;active_hand&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;dealer&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="c1"># Only show the dealer&#39;s first card (keep the thrill alive!)</span>
+        <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">,</span>
+        <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">bonus_balance</span><span class="p">,</span>
+        <span class="s2">&quot;bets&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">]</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="end_game">
+<a class="viewcode-back" href="../main.html#main.end_game">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">end_game</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ends the Blackjack game. </span>
+<span class="sd">    The dealer draws cards, results are verified for each player hand, and winnings are paid out.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Complete game results, final dealer cards, and updated account balances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    <span class="c1"># Check if we already busted on all our split hands</span>
+    <span class="n">all_lost</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;lost&quot;</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">])</span>
+    
+    <span class="c1"># If we have at least one hand still standing, the dealer must draw to 17</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_lost</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">:</span>
+            <span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;deck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+            
+    <span class="n">dealer_points</span> <span class="o">=</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">])</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="c1"># Iterate over all player hands (multiple hands if the player split)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">hand</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]):</span>
+        <span class="n">player_points</span> <span class="o">=</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">hand</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">bet</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bonus_bets&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="n">is_blackjack</span> <span class="o">=</span> <span class="p">(</span><span class="n">player_points</span> <span class="o">==</span> <span class="mi">21</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">hand</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">dealer_blackjack</span> <span class="o">=</span> <span class="p">(</span><span class="n">dealer_points</span> <span class="o">==</span> <span class="mi">21</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Heavy-duty logic to figure out who actually won</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;lost&quot;</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;YOU LOST!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">is_blackjack</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dealer_blackjack</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;BLACKJACK! YOU WON 3:2!&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">player_db</span><span class="p">:</span> 
+                <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">real_bet</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">bet</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span>
+                <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">bonus_bet</span>
+        <span class="k">elif</span> <span class="n">dealer_blackjack</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_blackjack</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Dealer has Blackjack! YOU LOST!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dealer_points</span> <span class="o">&gt;</span> <span class="mi">21</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Dealer busted! YOU WON!&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">player_db</span><span class="p">:</span> 
+                <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">real_bet</span> <span class="o">+</span> <span class="n">bet</span>
+                <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">bonus_bet</span>
+        <span class="k">elif</span> <span class="n">player_points</span> <span class="o">&gt;</span> <span class="n">dealer_points</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;YOU WON!&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">player_db</span><span class="p">:</span> 
+                <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">real_bet</span> <span class="o">+</span> <span class="n">bet</span>
+                <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">bonus_bet</span>
+        <span class="k">elif</span> <span class="n">player_points</span> <span class="o">&lt;</span> <span class="n">dealer_points</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;YOU LOST!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;PUSH!&quot;</span><span class="p">)</span> <span class="c1"># A tie, return the original wager</span>
+            <span class="k">if</span> <span class="n">player_db</span><span class="p">:</span> 
+                <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">real_bet</span>
+                <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">bonus_bet</span>
+            
+    <span class="k">if</span> <span class="n">player_db</span><span class="p">:</span>
+        <span class="n">balance</span> <span class="o">=</span> <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span>
+        <span class="n">bonus_balance</span> <span class="o">=</span> <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">balance</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bonus_balance</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">player_hands</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]</span>
+    <span class="n">dealer_hand</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;dealer_hand&quot;</span><span class="p">]</span>
+    <span class="n">bets</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Game is over, clean up the session so it doesn&#39;t leak memory on the server</span>
+    <span class="k">del</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;finished&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;dealer_hand&quot;</span><span class="p">:</span> <span class="n">dealer_hand</span><span class="p">,</span>
+        <span class="s2">&quot;dealer_points&quot;</span><span class="p">:</span> <span class="n">dealer_points</span><span class="p">,</span>
+        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+        <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="n">player_hands</span><span class="p">,</span>
+        <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">calculate_points</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">player_hands</span><span class="p">],</span>
+        <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">,</span>
+        <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">bonus_balance</span><span class="p">,</span>
+        <span class="s2">&quot;bets&quot;</span><span class="p">:</span> <span class="n">bets</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="start_game">
+<a class="viewcode-back" href="../main.html#main.start_game">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/start/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">start_game</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BetRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts a new game of Blackjack and places the player&#39;s wager.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        data (BetRequest): Betting data.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If the wager amount is invalid or funds are insufficient.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The state of the game right after dealing the first cards.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bet</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">bet</span>
+    <span class="n">fund_source</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fund_source</span>
+    
+    <span class="c1"># We can&#39;t play for free, must bet something</span>
+    <span class="k">if</span> <span class="n">bet</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Bet must be greater than 0&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fund_source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;real&quot;</span><span class="p">,</span> <span class="s2">&quot;bonus&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid fund source&quot;</span><span class="p">)</span>
+        
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player does not exist&quot;</span><span class="p">)</span>
+        
+    <span class="c1"># Deduct the cash from the appropriate balance</span>
+    <span class="k">if</span> <span class="n">fund_source</span> <span class="o">==</span> <span class="s2">&quot;real&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Insufficient real funds&quot;</span><span class="p">)</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">total_wagered</span> <span class="o">+=</span> <span class="n">bet</span> <span class="c1"># Increment the wager challenge tracker!</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Insufficient bonus funds&quot;</span><span class="p">)</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        
+    <span class="n">player</span><span class="o">.</span><span class="n">hands_played</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># Increment hands challenge tracker</span>
+        
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Shuffle the deck and deal - 2 cards to the player, 1 to the dealer (visible)</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="n">create_deck</span><span class="p">()</span>
+    <span class="n">player_hand</span> <span class="o">=</span> <span class="p">[</span><span class="n">deck</span><span class="o">.</span><span class="n">pop</span><span class="p">(),</span> <span class="n">deck</span><span class="o">.</span><span class="n">pop</span><span class="p">()]</span>
+    <span class="n">dealer_hand</span> <span class="o">=</span> <span class="p">[</span><span class="n">deck</span><span class="o">.</span><span class="n">pop</span><span class="p">()]</span>
+    
+    <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;deck&quot;</span><span class="p">:</span> <span class="n">deck</span><span class="p">,</span>
+        <span class="s2">&quot;player_hands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">player_hand</span><span class="p">],</span>
+        <span class="s2">&quot;active_hand&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;dealer_hand&quot;</span><span class="p">:</span> <span class="n">dealer_hand</span><span class="p">,</span>
+        <span class="s2">&quot;hand_status&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;playing&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;bets&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bet</span><span class="p">],</span>
+        <span class="s2">&quot;real_bets&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">real_bet</span><span class="p">],</span>
+        <span class="s2">&quot;bonus_bets&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bonus_bet</span><span class="p">]</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">],</span> <span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="hit">
+<a class="viewcode-back" href="../main.html#main.hit">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/hit/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hit</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The &#39;Hit&#39; action in Blackjack - the player draws another card from the deck.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If no active game session is found.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The updated game state, or triggers end_game if the player busts on their final hand.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">game_sessions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;No active game&quot;</span><span class="p">)</span>
+    
+    <span class="n">session</span> <span class="o">=</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Pull a fresh card off the top of the deck</span>
+    <span class="n">new_card</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;deck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_card</span><span class="p">)</span>
+    
+    <span class="n">points</span> <span class="o">=</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">])</span>
+    
+    <span class="c1"># Busted! Over 21, move on to the next hand if we split</span>
+    <span class="k">if</span> <span class="n">points</span> <span class="o">&gt;</span> <span class="mi">21</span><span class="p">:</span>
+        <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lost&quot;</span>
+        <span class="k">if</span> <span class="n">active</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]):</span>
+            <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">end_game</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="stand">
+<a class="viewcode-back" href="../main.html#main.stand">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/stand/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stand</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The &#39;Stand&#39; action in Blackjack - the player decides to take no more cards for the current hand.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If no active game session is found.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Game state moving to the next hand, or triggers end_game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">game_sessions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;No active game&quot;</span><span class="p">)</span>
+    
+    <span class="n">session</span> <span class="o">=</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    <span class="c1"># We are happy with our points, change status to stand</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">][</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;stand&quot;</span>
+    
+    <span class="c1"># If we have a split hand waiting, shift focus to it</span>
+    <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]):</span>
+        <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">end_game</span><span class="p">(</span><span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="double">
+<a class="viewcode-back" href="../main.html#main.double">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/double/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The &#39;Double Down&#39; action - double the wager, draw exactly ONE card, and automatically stand.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If game not found, wrong timing (only allowed on initial 2 cards), or lacking funds.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The updated game state (or final results if this was the last hand).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">game_sessions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;No active game&quot;</span><span class="p">)</span>
+        
+    <span class="n">session</span> <span class="o">=</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Doubling is strictly a first-move action</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Double is only available for the first 2 cards&quot;</span><span class="p">)</span>
+        
+    <span class="n">bet</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="n">is_real</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    
+    <span class="c1"># Charge an additional bet matching the original wager - high risk, high reward</span>
+    <span class="k">if</span> <span class="n">is_real</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Not enough real funds to double&quot;</span><span class="p">)</span>
+        <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Not enough bonus funds to double&quot;</span><span class="p">)</span>
+        <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bet</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">+=</span> <span class="n">real_bet</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bonus_bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bonus_bet</span>
+        
+    <span class="c1"># Draw one and only one card - the golden rule of doubling down</span>
+    <span class="n">new_card</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;deck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_card</span><span class="p">)</span>
+    
+    <span class="n">points</span> <span class="o">=</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">points</span> <span class="o">&gt;</span> <span class="mi">21</span><span class="p">:</span>
+        <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lost&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stand&quot;</span>
+        
+    <span class="k">if</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]):</span>
+        <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">end_game</span><span class="p">(</span><span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="split">
+<a class="viewcode-back" href="../main.html#main.split">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/split/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The &#39;Split&#39; action - divide a pair into two separate hands with identical base wagers,</span>
+<span class="sd">    provided the first two cards share the same point value (e.g., two 8s, or a 10 and a King).</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If no active game, wrong timing, mismatched card values, or insufficient funds.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The game state reflecting the newly formed split hands.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">email</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">game_sessions</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;No active game&quot;</span><span class="p">)</span>
+        
+    <span class="n">session</span> <span class="o">=</span> <span class="n">game_sessions</span><span class="p">[</span><span class="n">email</span><span class="p">]</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;active_hand&quot;</span><span class="p">]</span>
+    <span class="n">hand</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hand</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Split is only available for the first 2 cards&quot;</span><span class="p">)</span>
+        
+    <span class="n">rank1</span> <span class="o">=</span> <span class="n">hand</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">rank2</span> <span class="o">=</span> <span class="n">hand</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;2&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">:</span><span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+        <span class="s1">&#39;J&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">11</span>
+    <span class="p">}</span>
+    
+    <span class="c1"># Core casino rule: the cards must hold the exact same point value</span>
+    <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="n">rank1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">values</span><span class="p">[</span><span class="n">rank2</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Cards must have the same value to split&quot;</span><span class="p">)</span>
+            
+    <span class="n">bet</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player_db</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    
+    <span class="n">is_real</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">][</span><span class="n">active</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    
+    <span class="c1"># Splitting costs another base wager, check if they can afford it</span>
+    <span class="k">if</span> <span class="n">is_real</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Not enough real funds to split&quot;</span><span class="p">)</span>
+        <span class="n">player_db</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Not enough bonus funds to split&quot;</span><span class="p">)</span>
+        <span class="n">player_db</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">real_bet</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bonus_bet</span> <span class="o">=</span> <span class="n">bet</span>
+        
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">card1</span> <span class="o">=</span> <span class="n">hand</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">card2</span> <span class="o">=</span> <span class="n">hand</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># Dismantle the original hand from our tracking arrays</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+    <span class="n">orig_real</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+    <span class="n">orig_bonus</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bonus_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+    
+    <span class="c1"># Form two distinct hands, each instantly receiving a new card to start</span>
+    <span class="n">new_hand1</span> <span class="o">=</span> <span class="p">[</span><span class="n">card1</span><span class="p">,</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;deck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()]</span>
+    <span class="n">new_hand2</span> <span class="o">=</span> <span class="p">[</span><span class="n">card2</span><span class="p">,</span> <span class="n">session</span><span class="p">[</span><span class="s2">&quot;deck&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()]</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">new_hand2</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;player_hands&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">new_hand1</span><span class="p">)</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="s2">&quot;playing&quot;</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;hand_status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="s2">&quot;playing&quot;</span><span class="p">)</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">bet</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">bet</span><span class="p">)</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">real_bet</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;real_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">orig_real</span><span class="p">)</span>
+    
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bonus_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">bonus_bet</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="s2">&quot;bonus_bets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="n">orig_bonus</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">get_game_state</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_deposit">
+<a class="viewcode-back" href="../main.html#main.make_deposit">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/deposit/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_deposit</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PaymentRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint handling a deposit of funds into the player&#39;s real money balance.</span>
+<span class="sd">    Supports promotional codes (e.g., entering START yields a $50 bonus).</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        data (PaymentRequest): Payment details.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: On invalid amount or if the player isn&#39;t found.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Success message alongside updated balances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player not found&quot;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid amount&quot;</span><span class="p">)</span>
+        
+    <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span>
+    <span class="n">player</span><span class="o">.</span><span class="n">deposits_count</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># Progress towards deposit challenges</span>
+    
+    <span class="c1"># Audit trail for the financial transaction</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Deposit&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Completed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">method</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+    
+    <span class="c1"># Secret promo code giving out free bonus cash!</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">promo_code</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;START&quot;</span><span class="p">:</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="mi">50</span>
+        <span class="n">tx_bonus</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Promo Bonus&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Completed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;Promo Code&quot;</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx_bonus</span><span class="p">)</span>
+        
+    <span class="n">balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span>
+    <span class="n">bonus_balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Deposit successful&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">,</span> <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">bonus_balance</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="make_withdraw">
+<a class="viewcode-back" href="../main.html#main.make_withdraw">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/withdraw/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_withdraw</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">WithdrawRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Submits a withdrawal request to cash out the player&#39;s real funds.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        data (WithdrawRequest): Model defining the amount to withdraw.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: On invalid amount or insufficient funds.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Success message and the updated real money balance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player not found&quot;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid amount or insufficient funds&quot;</span><span class="p">)</span>
+        
+    <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">data</span><span class="o">.</span><span class="n">amount</span>
+    <span class="c1"># Register the withdrawal as &#39;Pending&#39; (waiting on accounting department approval)</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Withdrawal&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Pending&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;Bank Transfer&quot;</span><span class="p">)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+    <span class="n">balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Withdrawal requested successfully&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_history">
+<a class="viewcode-back" href="../main.html#main.get_history">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/history/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_history</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches the transaction history for a user, sorted from newest to oldest.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A list of dictionaries detailing the transactions for the Cashier view.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player not found&quot;</span><span class="p">)</span>
+        
+    <span class="n">txs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Transaction</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Transaction</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Transaction</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">txs</span><span class="p">:</span>
+        <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">method</span>
+        <span class="p">})</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="claim_challenge">
+<a class="viewcode-back" href="../main.html#main.claim_challenge">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/claim_challenge/</span><span class="si">{email}</span><span class="s2">/</span><span class="si">{challenge_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">claim_challenge</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">challenge_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Claims a reward for completing a specific challenge tier.</span>
+<span class="sd">    The player&#39;s challenge level increments after a successful claim, opening up the next tier.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        challenge_id (str): The identifier for the challenge (&quot;wager&quot;, &quot;hands&quot;, &quot;deposit&quot;).</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: If conditions aren&#39;t met or the ID is unrecognized.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A confirmation message of the successful claim.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player not found&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Wager challenge handling</span>
+    <span class="k">if</span> <span class="n">challenge_id</span> <span class="o">==</span> <span class="s2">&quot;wager&quot;</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_wager_claimed</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="ow">and</span> <span class="n">player</span><span class="o">.</span><span class="n">total_wagered</span> <span class="o">&gt;=</span> <span class="n">targets</span><span class="p">[</span><span class="n">level</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">reward</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">chal_wager_claimed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Challenge Reward&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Completed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;High Roller Lvl </span><span class="si">{</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Challenge not met or fully claimed&quot;</span><span class="p">)</span>
+            
+    <span class="c1"># Hands played challenge handling (mostly Blackjack)</span>
+    <span class="k">elif</span> <span class="n">challenge_id</span> <span class="o">==</span> <span class="s2">&quot;hands&quot;</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_hands_claimed</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="ow">and</span> <span class="n">player</span><span class="o">.</span><span class="n">hands_played</span> <span class="o">&gt;=</span> <span class="n">targets</span><span class="p">[</span><span class="n">level</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">reward</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">chal_hands_claimed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Challenge Reward&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Completed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;BJ Veteran Lvl </span><span class="si">{</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Challenge not met or fully claimed&quot;</span><span class="p">)</span>
+            
+    <span class="c1"># Deposit count challenge handling</span>
+    <span class="k">elif</span> <span class="n">challenge_id</span> <span class="o">==</span> <span class="s2">&quot;deposit&quot;</span><span class="p">:</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">chal_deposit_claimed</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="ow">and</span> <span class="n">player</span><span class="o">.</span><span class="n">deposits_count</span> <span class="o">&gt;=</span> <span class="n">targets</span><span class="p">[</span><span class="n">level</span><span class="p">]:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">reward</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">chal_deposit_claimed</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">player</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Challenge Reward&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;Completed&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Deposit Lvl </span><span class="si">{</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Challenge not met or fully claimed&quot;</span><span class="p">)</span>
+            
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Unknown challenge&quot;</span><span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Challenge claimed successfully!&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="spin_roulette">
+<a class="viewcode-back" href="../main.html#main.spin_roulette">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/roulette/spin/</span><span class="si">{email}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_roulette</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">RouletteBetRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spins the European roulette wheel, calculating payouts based on the bet type, </span>
+<span class="sd">    and modifying the player&#39;s balances accordingly.</span>
+<span class="sd">    All results are simulated pseudo-randomly on the backend; the frontend merely visualizes it!</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        email (str): The player&#39;s email address.</span>
+<span class="sd">        data (RouletteBetRequest): Object representing the bet type and wager amount.</span>
+<span class="sd">        </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        HTTPException: On insufficient funds.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The final spin result, color, payout, and updated balances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bet</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_amount</span>
+    <span class="n">fund_source</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fund_source</span>
+    <span class="k">if</span> <span class="n">bet</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Bet must be greater than 0&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fund_source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;real&quot;</span><span class="p">,</span> <span class="s2">&quot;bonus&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Invalid fund source&quot;</span><span class="p">)</span>
+        
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SessionLocal</span><span class="p">()</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Player does not exist&quot;</span><span class="p">)</span>
+        
+    <span class="c1"># Withdraw cash from the source the player opted to play with</span>
+    <span class="k">if</span> <span class="n">fund_source</span> <span class="o">==</span> <span class="s2">&quot;real&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Insufficient real funds&quot;</span><span class="p">)</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">total_wagered</span> <span class="o">+=</span> <span class="n">bet</span> <span class="c1"># More fuel for the wager challenges!</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">&lt;</span> <span class="n">bet</span><span class="p">:</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Insufficient bonus funds&quot;</span><span class="p">)</span>
+        <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">-=</span> <span class="n">bet</span>
+        
+    <span class="c1"># Generate a random landing slot representing a standard European wheel (one Zero)</span>
+    <span class="n">winning_number</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+    
+    <span class="c1"># Hardcoded matrix of red slots (everything else is black, except for the green zero)</span>
+    <span class="n">red_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">36</span><span class="p">]</span>
+    
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span> <span class="k">if</span> <span class="n">winning_number</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;red&quot;</span> <span class="k">if</span> <span class="n">winning_number</span> <span class="ow">in</span> <span class="n">red_numbers</span> <span class="k">else</span> <span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">even_odd</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span> <span class="k">if</span> <span class="n">winning_number</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">winning_number</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;odd&quot;</span> <span class="k">if</span> <span class="n">winning_number</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">)</span>
+    <span class="n">low_high</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">winning_number</span> <span class="o">&lt;=</span> <span class="mi">18</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;high&quot;</span> <span class="k">if</span> <span class="mi">19</span> <span class="o">&lt;=</span> <span class="n">winning_number</span> <span class="o">&lt;=</span> <span class="mi">36</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">)</span>
+    
+    <span class="n">win</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Complex validation path checking if the player hit their specific bet type</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span> <span class="ow">and</span> <span class="n">color</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;black&quot;</span> <span class="ow">and</span> <span class="n">color</span> <span class="o">==</span> <span class="s2">&quot;black&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;even&quot;</span> <span class="ow">and</span> <span class="n">even_odd</span> <span class="o">==</span> <span class="s2">&quot;even&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;odd&quot;</span> <span class="ow">and</span> <span class="n">even_odd</span> <span class="o">==</span> <span class="s2">&quot;odd&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;low&quot;</span> <span class="ow">and</span> <span class="n">low_high</span> <span class="o">==</span> <span class="s2">&quot;low&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;high&quot;</span> <span class="ow">and</span> <span class="n">low_high</span> <span class="o">==</span> <span class="s2">&quot;high&quot;</span><span class="p">:</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_type</span> <span class="o">==</span> <span class="s2">&quot;number&quot;</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">bet_number</span> <span class="o">==</span> <span class="n">winning_number</span><span class="p">:</span>
+        <span class="c1"># A direct hit on a specific number - massive payout (35:1 + original wager returned = 36x)</span>
+        <span class="n">win</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">payout_multiplier</span> <span class="o">=</span> <span class="mi">36</span>
+
+    <span class="n">winnings</span> <span class="o">=</span> <span class="n">bet</span> <span class="o">*</span> <span class="n">payout_multiplier</span> <span class="k">if</span> <span class="n">win</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">win</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fund_source</span> <span class="o">==</span> <span class="s2">&quot;real&quot;</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">winnings</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span> <span class="o">+=</span> <span class="n">winnings</span>
+            
+    <span class="n">balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">balance</span>
+    <span class="n">bonus_balance</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">bonus_balance</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;winning_number&quot;</span><span class="p">:</span> <span class="n">winning_number</span><span class="p">,</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">color</span><span class="p">,</span>
+        <span class="s2">&quot;win&quot;</span><span class="p">:</span> <span class="n">win</span><span class="p">,</span>
+        <span class="s2">&quot;winnings&quot;</span><span class="p">:</span> <span class="n">winnings</span><span class="p">,</span>
+        <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">,</span>
+        <span class="s2">&quot;bonus_balance&quot;</span><span class="p">:</span> <span class="n">bonus_balance</span>
+    <span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Student.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

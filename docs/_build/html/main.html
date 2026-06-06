@@ -1,0 +1,1030 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main module &mdash; UKSW Royale Casino 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="KasynoOnline" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            UKSW Royale Casino
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">KasynoOnline</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">main module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main.BetRequest"><code class="docutils literal notranslate"><span class="pre">BetRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.BetRequest.bet"><code class="docutils literal notranslate"><span class="pre">BetRequest.bet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.BetRequest.fund_source"><code class="docutils literal notranslate"><span class="pre">BetRequest.fund_source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">BetRequest.bet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">BetRequest.fund_source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.BetRequest.model_config"><code class="docutils literal notranslate"><span class="pre">BetRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.PaymentRequest"><code class="docutils literal notranslate"><span class="pre">PaymentRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.PaymentRequest.amount"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.PaymentRequest.method"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.PaymentRequest.promo_code"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.promo_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.PaymentRequest.model_config"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">PaymentRequest.promo_code</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.RouletteBetRequest"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.RouletteBetRequest.bet_amount"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.RouletteBetRequest.fund_source"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.fund_source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.RouletteBetRequest.bet_type"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.RouletteBetRequest.bet_number"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_number</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_number</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.bet_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.fund_source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.RouletteBetRequest.model_config"><code class="docutils literal notranslate"><span class="pre">RouletteBetRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.Transaction"><code class="docutils literal notranslate"><span class="pre">Transaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.amount"><code class="docutils literal notranslate"><span class="pre">Transaction.amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.date"><code class="docutils literal notranslate"><span class="pre">Transaction.date</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.id"><code class="docutils literal notranslate"><span class="pre">Transaction.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.method"><code class="docutils literal notranslate"><span class="pre">Transaction.method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.status"><code class="docutils literal notranslate"><span class="pre">Transaction.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.type"><code class="docutils literal notranslate"><span class="pre">Transaction.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.user"><code class="docutils literal notranslate"><span class="pre">Transaction.user</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.Transaction.user_id"><code class="docutils literal notranslate"><span class="pre">Transaction.user_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.balance"><code class="docutils literal notranslate"><span class="pre">User.balance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.bonus_balance"><code class="docutils literal notranslate"><span class="pre">User.bonus_balance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.chal_deposit_claimed"><code class="docutils literal notranslate"><span class="pre">User.chal_deposit_claimed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.chal_hands_claimed"><code class="docutils literal notranslate"><span class="pre">User.chal_hands_claimed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.chal_wager_claimed"><code class="docutils literal notranslate"><span class="pre">User.chal_wager_claimed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.deposits_count"><code class="docutils literal notranslate"><span class="pre">User.deposits_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.email"><code class="docutils literal notranslate"><span class="pre">User.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.first_name"><code class="docutils literal notranslate"><span class="pre">User.first_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.hands_played"><code class="docutils literal notranslate"><span class="pre">User.hands_played</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.id"><code class="docutils literal notranslate"><span class="pre">User.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.last_name"><code class="docutils literal notranslate"><span class="pre">User.last_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.password"><code class="docutils literal notranslate"><span class="pre">User.password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.total_wagered"><code class="docutils literal notranslate"><span class="pre">User.total_wagered</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.User.transactions"><code class="docutils literal notranslate"><span class="pre">User.transactions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.UserAuth"><code class="docutils literal notranslate"><span class="pre">UserAuth</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserAuth.email"><code class="docutils literal notranslate"><span class="pre">UserAuth.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserAuth.password"><code class="docutils literal notranslate"><span class="pre">UserAuth.password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">UserAuth.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserAuth.model_config"><code class="docutils literal notranslate"><span class="pre">UserAuth.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">UserAuth.password</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.UserRegister"><code class="docutils literal notranslate"><span class="pre">UserRegister</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserRegister.first_name"><code class="docutils literal notranslate"><span class="pre">UserRegister.first_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserRegister.last_name"><code class="docutils literal notranslate"><span class="pre">UserRegister.last_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserRegister.email"><code class="docutils literal notranslate"><span class="pre">UserRegister.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserRegister.password"><code class="docutils literal notranslate"><span class="pre">UserRegister.password</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">UserRegister.email</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">UserRegister.first_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">UserRegister.last_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.UserRegister.model_config"><code class="docutils literal notranslate"><span class="pre">UserRegister.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">UserRegister.password</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.WithdrawRequest"><code class="docutils literal notranslate"><span class="pre">WithdrawRequest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#main.WithdrawRequest.amount"><code class="docutils literal notranslate"><span class="pre">WithdrawRequest.amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">WithdrawRequest.amount</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main.WithdrawRequest.model_config"><code class="docutils literal notranslate"><span class="pre">WithdrawRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#main.calculate_points"><code class="docutils literal notranslate"><span class="pre">calculate_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.claim_challenge"><code class="docutils literal notranslate"><span class="pre">claim_challenge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.create_deck"><code class="docutils literal notranslate"><span class="pre">create_deck()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.double"><code class="docutils literal notranslate"><span class="pre">double()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.end_game"><code class="docutils literal notranslate"><span class="pre">end_game()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.get_game_state"><code class="docutils literal notranslate"><span class="pre">get_game_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.get_history"><code class="docutils literal notranslate"><span class="pre">get_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.get_state"><code class="docutils literal notranslate"><span class="pre">get_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.hit"><code class="docutils literal notranslate"><span class="pre">hit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.login"><code class="docutils literal notranslate"><span class="pre">login()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.main_page"><code class="docutils literal notranslate"><span class="pre">main_page()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.make_deposit"><code class="docutils literal notranslate"><span class="pre">make_deposit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.make_withdraw"><code class="docutils literal notranslate"><span class="pre">make_withdraw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.spin_roulette"><code class="docutils literal notranslate"><span class="pre">spin_roulette()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.stand"><code class="docutils literal notranslate"><span class="pre">stand()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#main.start_game"><code class="docutils literal notranslate"><span class="pre">start_game()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UKSW Royale Casino</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">KasynoOnline</a></li>
+      <li class="breadcrumb-item active">main module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="main.BetRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">BetRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fund_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'real'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#BetRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.BetRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for placing a bet (e.g., in Blackjack).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.BetRequest.bet">
+<span class="sig-name descname"><span class="pre">bet</span></span><a class="headerlink" href="#main.BetRequest.bet" title="Link to this definition"></a></dt>
+<dd><p>Wager amount.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.BetRequest.fund_source">
+<span class="sig-name descname"><span class="pre">fund_source</span></span><a class="headerlink" href="#main.BetRequest.fund_source" title="Link to this definition"></a></dt>
+<dd><p>Source of funds (“real” or “bonus”). Defaults to “real”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">bet</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">fund_source</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.BetRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.BetRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.PaymentRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">PaymentRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">promo_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#PaymentRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.PaymentRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for deposit requests.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.PaymentRequest.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><a class="headerlink" href="#main.PaymentRequest.amount" title="Link to this definition"></a></dt>
+<dd><p>Amount to deposit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.PaymentRequest.method">
+<span class="sig-name descname"><span class="pre">method</span></span><a class="headerlink" href="#main.PaymentRequest.method" title="Link to this definition"></a></dt>
+<dd><p>Payment method (e.g., “Card”, “BLIK”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.PaymentRequest.promo_code">
+<span class="sig-name descname"><span class="pre">promo_code</span></span><a class="headerlink" href="#main.PaymentRequest.promo_code" title="Link to this definition"></a></dt>
+<dd><p>Optional promo code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">method</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.PaymentRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.PaymentRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">promo_code</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.RouletteBetRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">RouletteBetRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">bet_amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fund_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'real'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bet_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bet_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#RouletteBetRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.RouletteBetRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for placing a bet in Roulette.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.RouletteBetRequest.bet_amount">
+<span class="sig-name descname"><span class="pre">bet_amount</span></span><a class="headerlink" href="#main.RouletteBetRequest.bet_amount" title="Link to this definition"></a></dt>
+<dd><p>Wager amount.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.RouletteBetRequest.fund_source">
+<span class="sig-name descname"><span class="pre">fund_source</span></span><a class="headerlink" href="#main.RouletteBetRequest.fund_source" title="Link to this definition"></a></dt>
+<dd><p>Source of funds (“real” or “bonus”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.RouletteBetRequest.bet_type">
+<span class="sig-name descname"><span class="pre">bet_type</span></span><a class="headerlink" href="#main.RouletteBetRequest.bet_type" title="Link to this definition"></a></dt>
+<dd><p>Type of bet (“red”, “black”, “even”, “odd”, “low”, “high”, “number”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.RouletteBetRequest.bet_number">
+<span class="sig-name descname"><span class="pre">bet_number</span></span><a class="headerlink" href="#main.RouletteBetRequest.bet_number" title="Link to this definition"></a></dt>
+<dd><p>Chosen number (if bet_type is “number”). Defaults to -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">bet_amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">bet_number</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">bet_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">fund_source</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.RouletteBetRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.RouletteBetRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.Transaction">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">Transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#Transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.Transaction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<p>Database model representing a single financial transaction.
+Used for logging deposits, withdrawals, and challenge rewards.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><a class="headerlink" href="#main.Transaction.amount" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.date">
+<span class="sig-name descname"><span class="pre">date</span></span><a class="headerlink" href="#main.Transaction.date" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#main.Transaction.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.method">
+<span class="sig-name descname"><span class="pre">method</span></span><a class="headerlink" href="#main.Transaction.method" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.status">
+<span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#main.Transaction.status" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#main.Transaction.type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#main.Transaction.user" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.Transaction.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="headerlink" href="#main.Transaction.user_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.User">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">User</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#User"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.User" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
+<p>Database model representing a user (player).
+Stores authentication data, balances (real and bonus), and challenge progression.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.balance">
+<span class="sig-name descname"><span class="pre">balance</span></span><a class="headerlink" href="#main.User.balance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.bonus_balance">
+<span class="sig-name descname"><span class="pre">bonus_balance</span></span><a class="headerlink" href="#main.User.bonus_balance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.chal_deposit_claimed">
+<span class="sig-name descname"><span class="pre">chal_deposit_claimed</span></span><a class="headerlink" href="#main.User.chal_deposit_claimed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.chal_hands_claimed">
+<span class="sig-name descname"><span class="pre">chal_hands_claimed</span></span><a class="headerlink" href="#main.User.chal_hands_claimed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.chal_wager_claimed">
+<span class="sig-name descname"><span class="pre">chal_wager_claimed</span></span><a class="headerlink" href="#main.User.chal_wager_claimed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.deposits_count">
+<span class="sig-name descname"><span class="pre">deposits_count</span></span><a class="headerlink" href="#main.User.deposits_count" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#main.User.email" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.first_name">
+<span class="sig-name descname"><span class="pre">first_name</span></span><a class="headerlink" href="#main.User.first_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.hands_played">
+<span class="sig-name descname"><span class="pre">hands_played</span></span><a class="headerlink" href="#main.User.hands_played" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#main.User.id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.last_name">
+<span class="sig-name descname"><span class="pre">last_name</span></span><a class="headerlink" href="#main.User.last_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.password">
+<span class="sig-name descname"><span class="pre">password</span></span><a class="headerlink" href="#main.User.password" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.total_wagered">
+<span class="sig-name descname"><span class="pre">total_wagered</span></span><a class="headerlink" href="#main.User.total_wagered" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.User.transactions">
+<span class="sig-name descname"><span class="pre">transactions</span></span><a class="headerlink" href="#main.User.transactions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.UserAuth">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">UserAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#UserAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.UserAuth" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for user login.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserAuth.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#main.UserAuth.email" title="Link to this definition"></a></dt>
+<dd><p>Email address.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserAuth.password">
+<span class="sig-name descname"><span class="pre">password</span></span><a class="headerlink" href="#main.UserAuth.password" title="Link to this definition"></a></dt>
+<dd><p>Password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">email</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserAuth.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.UserAuth.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">password</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.UserRegister">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">UserRegister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#UserRegister"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.UserRegister" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for registering a new user.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserRegister.first_name">
+<span class="sig-name descname"><span class="pre">first_name</span></span><a class="headerlink" href="#main.UserRegister.first_name" title="Link to this definition"></a></dt>
+<dd><p>First name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserRegister.last_name">
+<span class="sig-name descname"><span class="pre">last_name</span></span><a class="headerlink" href="#main.UserRegister.last_name" title="Link to this definition"></a></dt>
+<dd><p>Last name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserRegister.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#main.UserRegister.email" title="Link to this definition"></a></dt>
+<dd><p>Email address.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserRegister.password">
+<span class="sig-name descname"><span class="pre">password</span></span><a class="headerlink" href="#main.UserRegister.password" title="Link to this definition"></a></dt>
+<dd><p>Password.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">email</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">first_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">last_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.UserRegister.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.UserRegister.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">password</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="main.WithdrawRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">WithdrawRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#WithdrawRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.WithdrawRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Model for withdrawal requests.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.WithdrawRequest.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><a class="headerlink" href="#main.WithdrawRequest.amount" title="Link to this definition"></a></dt>
+<dd><p>Amount to withdraw.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="main.WithdrawRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#main.WithdrawRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.calculate_points">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">calculate_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#calculate_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.calculate_points" title="Link to this definition"></a></dt>
+<dd><p>Calculates the total points for a given Blackjack hand.
+An Ace counts as 11, unless the total exceeds 21, in which case it counts as 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hand</strong> (<em>list</em>) – A list of card strings belonging to the player or dealer.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The optimized point total for the provided hand.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.claim_challenge">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">claim_challenge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">challenge_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#claim_challenge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.claim_challenge" title="Link to this definition"></a></dt>
+<dd><p>Claims a reward for completing a specific challenge tier.
+The player’s challenge level increments after a successful claim, opening up the next tier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+<li><p><strong>challenge_id</strong> (<em>str</em>) – The identifier for the challenge (“wager”, “hands”, “deposit”).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If conditions aren’t met or the ID is unrecognized.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A confirmation message of the successful claim.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.create_deck">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">create_deck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#create_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.create_deck" title="Link to this definition"></a></dt>
+<dd><p>Creates and shuffles a standard 52-card deck (e.g., for Blackjack).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A shuffled list of strings representing cards (e.g., [‘2♠’, ‘K♥’, ‘A♣’, …]).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.double">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#double"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.double" title="Link to this definition"></a></dt>
+<dd><p>The ‘Double Down’ action - double the wager, draw exactly ONE card, and automatically stand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If game not found, wrong timing (only allowed on initial 2 cards), or lacking funds.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated game state (or final results if this was the last hand).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.end_game">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">end_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#end_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.end_game" title="Link to this definition"></a></dt>
+<dd><p>Ends the Blackjack game.
+The dealer draws cards, results are verified for each player hand, and winnings are paid out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Complete game results, final dealer cards, and updated account balances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.get_game_state">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">get_game_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#get_game_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.get_game_state" title="Link to this definition"></a></dt>
+<dd><p>Helper function to build an object representing the current Blackjack game state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>dict</em>) – The active game session for the user.</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A parsed object detailing cards on the table, point totals, and wager amounts.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.get_history">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">get_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#get_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.get_history" title="Link to this definition"></a></dt>
+<dd><p>Fetches the transaction history for a user, sorted from newest to oldest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries detailing the transactions for the Cashier view.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.get_state">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.get_state" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the full account state of a player, including any active game session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If the player does not exist.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A summary of balances, challenge stats, and the current active game state (if any).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.hit">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">hit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#hit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.hit" title="Link to this definition"></a></dt>
+<dd><p>The ‘Hit’ action in Blackjack - the player draws another card from the deck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If no active game session is found.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated game state, or triggers end_game if the player busts on their final hand.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.login">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.UserAuth" title="main.UserAuth"><span class="pre">UserAuth</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.login" title="Link to this definition"></a></dt>
+<dd><p>Endpoint for user login.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="#main.UserAuth" title="main.UserAuth"><em>UserAuth</em></a>) – Login credentials (email, password).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Account details upon successful login or an error message.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.main_page">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#main_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.main_page" title="Link to this definition"></a></dt>
+<dd><p>Endpoint serving the main HTML page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Response containing the index.html file, bypassing browser cache.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>FileResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.make_deposit">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">make_deposit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.PaymentRequest" title="main.PaymentRequest"><span class="pre">PaymentRequest</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#make_deposit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.make_deposit" title="Link to this definition"></a></dt>
+<dd><p>Endpoint handling a deposit of funds into the player’s real money balance.
+Supports promotional codes (e.g., entering START yields a $50 bonus).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#main.PaymentRequest" title="main.PaymentRequest"><em>PaymentRequest</em></a>) – Payment details.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – On invalid amount or if the player isn’t found.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Success message alongside updated balances.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.make_withdraw">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">make_withdraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.WithdrawRequest" title="main.WithdrawRequest"><span class="pre">WithdrawRequest</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#make_withdraw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.make_withdraw" title="Link to this definition"></a></dt>
+<dd><p>Submits a withdrawal request to cash out the player’s real funds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#main.WithdrawRequest" title="main.WithdrawRequest"><em>WithdrawRequest</em></a>) – Model defining the amount to withdraw.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – On invalid amount or insufficient funds.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Success message and the updated real money balance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.register">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.UserRegister" title="main.UserRegister"><span class="pre">UserRegister</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.register" title="Link to this definition"></a></dt>
+<dd><p>Endpoint for registering a new player.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="#main.UserRegister" title="main.UserRegister"><em>UserRegister</em></a>) – Form data received for registration.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A success message or an error if the email is already taken.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.spin_roulette">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">spin_roulette</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.RouletteBetRequest" title="main.RouletteBetRequest"><span class="pre">RouletteBetRequest</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#spin_roulette"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.spin_roulette" title="Link to this definition"></a></dt>
+<dd><p>Spins the European roulette wheel, calculating payouts based on the bet type,
+and modifying the player’s balances accordingly.
+All results are simulated pseudo-randomly on the backend; the frontend merely visualizes it!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#main.RouletteBetRequest" title="main.RouletteBetRequest"><em>RouletteBetRequest</em></a>) – Object representing the bet type and wager amount.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – On insufficient funds.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The final spin result, color, payout, and updated balances.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.split">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.split" title="Link to this definition"></a></dt>
+<dd><p>The ‘Split’ action - divide a pair into two separate hands with identical base wagers,
+provided the first two cards share the same point value (e.g., two 8s, or a 10 and a King).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If no active game, wrong timing, mismatched card values, or insufficient funds.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The game state reflecting the newly formed split hands.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.stand">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">stand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#stand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.stand" title="Link to this definition"></a></dt>
+<dd><p>The ‘Stand’ action in Blackjack - the player decides to take no more cards for the current hand.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If no active game session is found.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Game state moving to the next hand, or triggers end_game.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.start_game">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">start_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#main.BetRequest" title="main.BetRequest"><span class="pre">BetRequest</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#start_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.start_game" title="Link to this definition"></a></dt>
+<dd><p>Starts a new game of Blackjack and places the player’s wager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<em>str</em>) – The player’s email address.</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#main.BetRequest" title="main.BetRequest"><em>BetRequest</em></a>) – Betting data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>HTTPException</strong> – If the wager amount is invalid or funds are insufficient.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The state of the game right after dealing the first cards.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="KasynoOnline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Student.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
