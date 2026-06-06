@@ -59,4 +59,5 @@ If you want to view the code, test the game, or modify the project:
    1. index.html
    2. style.css
    3. script.js
+
 Were created by Google Gemini AI.
